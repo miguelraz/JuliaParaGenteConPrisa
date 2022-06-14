@@ -46,8 +46,8 @@
     struct Point3D 
         ... 
     end
-    ```.
-   1. Usas `Int`s o `Float`s? Escoge cualquiera de los dos por ahora.
+    ```
+   Usas `Int`s o `Float`s? Escoge cualquiera de los dos por ahora.
 2. Define una funcion que calcule la norma del `Punto3D`.
 3. Define una funcion para sumar `Punto3D`s.
 4. Define una funcion para restar `Punto3D`s.
