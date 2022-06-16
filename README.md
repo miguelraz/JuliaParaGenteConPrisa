@@ -180,7 +180,50 @@ rand(Bool, 10, 10)
 
    ```
 
+## Dia 03
+----
+Temario:
+- `lstopo` y latencia
+- Instalacion de VSCode y el plugin
+- Structs y parametricos
+- Vectores, Algebra lineal, Principio de optimizaciones
+- Instalacion [via juliaup](https://github.com/JuliaLang/juliaup) - USEN ESTO!!! 
 
+### Optimizaciones basicas
+
+```julia
+function dead() # Dead code optimization
+  #x = 1 # NO LO NECESITO
+  #x = 2 # TAMPOCO 
+  x = 3
+  y = 1
+  x + y # Register allocation/saving
+end
+```
+
+```julia
+# Loop Invariant Code Motion -> "saca" una operacion del Loop
+function licm(vector, n) # v = [1,2,3], n = 3
+  avg = 0
+  for i in vector
+    avg += i
+  end
+  avg/n
+end
+```
+
+```julia
+function branch(x) # branch elision / Branch compaction
+  if x < 5 
+    if x < 10
+      return true
+    end
+  end
+end
+```
+
+
+```
 #### Structs
 -----
 1. Define un struct para un punto en 3D, con un campo por coordenada.
