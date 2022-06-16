@@ -223,7 +223,6 @@ end
 ```
 
 
-```
 #### Structs
 -----
 1. Define un struct para un punto en 3D, con un campo por coordenada.
@@ -255,6 +254,11 @@ end
 ----
 Repaso
 1. Que es la `estabilidad de tipos`? Por que es importante? Intenta evaluar `sqrt(-9)` y explicar por que no da un `Complex64`.
+```
+La estabilidad de tipos permite que Julia entienda la entrada y salida de tipos de datos y especialize el codigo de tu funcion con base en ello.
+
+`sqrt(-9)` romperia esa estabilidad si se permitiera en regresar `Float64` en algunos inputs y `Complex64` en otros.
+```
 2. Intenta definir
   1. un `struct` de `Punto3D` con 3 campos `x,y,z`.
   2. Define `Base.:+(p1::Punto3D, p2::Punto3D)` coordenada a coordenada.
@@ -263,7 +267,7 @@ Repaso
     function suma(v::Vector{Punto3D})
       res = 0
       for i in v
-        count += i
+        res += i
       end
       res
     #...
@@ -277,10 +281,38 @@ Repaso
   5. Inspecciona los tipos y ensamblador de `Punto3D` vs una version que no tengan tipos los `x,y,z`.
     1. Recuerda que `@code_warntype` te alerta si Julia no puede inferir (deducir) el tipo de datos que sale de tu funcion. Si falla, intenta usar `Cthulhu.jl`.
     2. `@code_llvm misuma(v)` va a decir cosas interesantes - que relaciones vez con `@code_native misuma(v)` y `@btime` de `BenchmarkTools.jl` cuando no usas tipos en los campos de `x,y,z` vs cuando si? Y cuando los parametrizas?
-  6. Bonus: Intenta usar `Struct
+  6. Bonus: Intenta usar `StructArrays`.
 
+### Matrices y algebra lineal
 3. La matriz de Strang se de fine como una matriz cuadrada que tiene un `2` en la diagonal, `-1`, en las diagonales no centradas (off-diagonal) y 0 en todos los demas lugares
   1. define una funcion para crear una matriz de Strang para un tamano `n`.
+  ```
+   2  -1  0
+  -1   2 -1
+   0  -1  2
+   ```
+
+   *Solucion primera*:
+   ```julia-repl
+        function strang(n)
+           mat = [0 for i in 1:n, j in 1:n]
+           for i in 1:n
+               for j in 1:n
+                   if i == j
+                       mat[i, j] = 2
+                   end
+               end
+           end
+           for i in 1:n
+               for j in 1:n
+                   if abs(i - j) == 1
+                       mat[i, j] = -1
+                   end
+               end
+           end
+           mat
+       end
+   ```
   2. Ahora hazla generica usando las funciones `zeros`, `one`. BONUS: Puedes definirla en una sola linea `?` ? :D
 4. Define una funcion `suertuda(T, n)` donde `T` sea un tipo de dato numerico y `n` sea el tamano cuadrado de la matriz, y todas las entradas valgan `7` en ese tipo numerico.
 5. Convierte la Matriz de Strang en una matriz `TriDiagonal`.
@@ -292,6 +324,9 @@ Repaso
 6. Que es un `CartesianIndex`? Apoyate en el manual
 7. Que es `IndexStyle`?
 8. Como puedes accessar las factorizaciones de una matriz? Cuantas hay en `LinearAlgebra`?
+9. Define una matriz de 2x2x2 con los numeros del 1 al 8.
+10. Que es un numero de condicion?
+  - Investiga el libro de Gilbert Strang de Algebra lineal para ingenieros, pues la rama de `Analisis numerico` y `algebra lineal numerico` es parte de esta disciplina.
 
 ### Plots.jl y DataFrames.jl
   
