@@ -316,13 +316,20 @@ La estabilidad de tipos permite que Julia entienda la entrada y salida de tipos 
   2. Ahora hazla generica usando las funciones `zeros`, `one`. BONUS: Puedes definirla en una sola linea `?` ? :D
 4. Define una funcion `suertuda(T, n)` donde `T` sea un tipo de dato numerico y `n` sea el tamano cuadrado de la matriz, y todas las entradas valgan `7` en ese tipo numerico.
 5. Convierte la Matriz de Strang en una matriz `TriDiagonal`.
-6. Genera una matriz de con ~10% de las entradas siendo 0, y el resto siendo un numero flotante entre 0 y 1 de tamanio 1000x1000.
-  1. Encuentra sus eigenvalores
-  2. Conviertela en una matriz `Sparse` y encuentra sus eigenvalores otra vez.
+6. Genera una matriz de con ~10% de las entradas siendo 0, y el resto siendo un numero flotante entre 0 y 1 de tamanio 1000x1000 - no uses elementos cuyos indices difieran en mas de 10 unidades.
+```julia
+a = [rand() < 0.001 && abs(i - j) <= 10 ? 1 : 0 for i in 1:1000, j in 1:1000]
+```
+  1. Cuadrala y toma el tiempo con `@time`.
+  2. Conviertela en una matriz `SparseArray` y cuadrala, mide las diferencias de tiempos con `@time`.
+  3. Cuantos ordenes de magnitued mas rapido fue uno que el otro?
 5. Multiplica `[1,2,3] .* [1 2 3]` y `[1,2,3] .* [1,2,3]`. Por que son distintos? Cuales son los tipos de datos de salida?
   1. Usa `@edit [1,2,3] .* [1,2,3]` y `@edit [1,2,3] .* [1 2 3]` para verificar tus resultados.
 6. Que es un `CartesianIndex`? Apoyate en el manual
 7. Que es `IndexStyle`?
+```
+De ahora en adelante queremos usar `eachindex`.
+```
 8. Como puedes accessar las factorizaciones de una matriz? Cuantas hay en `LinearAlgebra`?
 9. Define una matriz de 2x2x2 con los numeros del 1 al 8.
 10. Que es un numero de condicion?
