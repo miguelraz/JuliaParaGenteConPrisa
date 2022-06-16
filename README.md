@@ -251,6 +251,53 @@ end
 5. Agrega funcionalidad a `Punto3D` para que acepte `StaticArrays` y tests.
 6. Benchmarkea la diferencia con `BenchmarkTools.jl`.
 
+### Dia 04
+----
+Repaso
+1. Que es la `estabilidad de tipos`? Por que es importante? Intenta evaluar `sqrt(-9)` y explicar por que no da un `Complex64`.
+2. Intenta definir
+  1. un `struct` de `Punto3D` con 3 campos `x,y,z`.
+  2. Define `Base.:+(p1::Punto3D, p2::Punto3D)` coordenada a coordenada.
+  3. Ahora define una funcion que sume un arreglo:
+    ```julia
+    function suma(v::Vector{Punto3D})
+      res = 0
+      for i in v
+        count += i
+      end
+      res
+    #...
+    end
+    ```
+    Intenta usar sumar el siguiente arreglo con tu funcion:
+    ```julia
+    v = [Punto3D(1,1,1) for i in 1:1_000_000]
+    ```
+  4. Ahora intenta hacer que `Punto3D` funcione para cualquier `Int` y `Float64` nativo. Llamalo `P3D{T}`.
+  5. Inspecciona los tipos y ensamblador de `Punto3D` vs una version que no tengan tipos los `x,y,z`.
+    1. Recuerda que `@code_warntype` te alerta si Julia no puede inferir (deducir) el tipo de datos que sale de tu funcion. Si falla, intenta usar `Cthulhu.jl`.
+    2. `@code_llvm misuma(v)` va a decir cosas interesantes - que relaciones vez con `@code_native misuma(v)` y `@btime` de `BenchmarkTools.jl` cuando no usas tipos en los campos de `x,y,z` vs cuando si? Y cuando los parametrizas?
+  6. Bonus: Intenta usar `Struct
+
+3. La matriz de Strang se de fine como una matriz cuadrada que tiene un `2` en la diagonal, `-1`, en las diagonales no centradas (off-diagonal) y 0 en todos los demas lugares
+  1. define una funcion para crear una matriz de Strang para un tamano `n`.
+  2. Ahora hazla generica usando las funciones `zeros`, `one`. BONUS: Puedes definirla en una sola linea `?` ? :D
+4. Define una funcion `suertuda(T, n)` donde `T` sea un tipo de dato numerico y `n` sea el tamano cuadrado de la matriz, y todas las entradas valgan `7` en ese tipo numerico.
+5. Convierte la Matriz de Strang en una matriz `TriDiagonal`.
+6. Genera una matriz de con ~10% de las entradas siendo 0, y el resto siendo un numero flotante entre 0 y 1 de tamanio 1000x1000.
+  1. Encuentra sus eigenvalores
+  2. Conviertela en una matriz `Sparse` y encuentra sus eigenvalores otra vez.
+5. Multiplica `[1,2,3] .* [1 2 3]` y `[1,2,3] .* [1,2,3]`. Por que son distintos? Cuales son los tipos de datos de salida?
+  1. Usa `@edit [1,2,3] .* [1,2,3]` y `@edit [1,2,3] .* [1 2 3]` para verificar tus resultados.
+6. Que es un `CartesianIndex`? Apoyate en el manual
+7. Que es `IndexStyle`?
+8. Como puedes accessar las factorizaciones de una matriz? Cuantas hay en `LinearAlgebra`?
+
+### Plots.jl y DataFrames.jl
+  
+1. Descarga `UnicodePlots.jl`. Usa 2 vectores aleatorios 
+
+
 
 
 
