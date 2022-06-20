@@ -335,11 +335,180 @@ De ahora en adelante queremos usar `eachindex`.
 10. Que es un numero de condicion?
   - Investiga el libro de Gilbert Strang de Algebra lineal para ingenieros, pues la rama de `Analisis numerico` y `algebra lineal numerico` es parte de esta disciplina.
 
+
+## Dia 05
 ### Plots.jl y DataFrames.jl
+
+#### Choro: Por que vale la pena Julia y no Pandas/R/datatable/clickhouse/Polars
+1. Siempre hay un poquito "mas" que investigar/hacer/calcular y ahi se rompe al abstraccion de tus datos. El chiste es que tu herramienta (Ya sea Julia o algo mas) te permite construir eso facilmente y que sea rapido.
   
-1. Descarga `UnicodePlots.jl`. Usa 2 vectores aleatorios 
+Arreglos:
+```julia
+x = [1,2,3]
+x[begin] == 1
+x[end] == 3
+x[3] # x[begin:end -1] es un idioma util
+```
+1. Descarga `UnicodePlots.jl`. Usa 2 vectores aleatorios de 100 para intentar varias graficas.
+2. Descarga `Plots, DataFrames, CSV, FileTrees`. Grafica alguna grafica de que hayas hecho con `UnicodePlots` pero ahora en `Plots`. 
+  - Agrega una leyenda
+  - cambia los limites
+  - agrega un titulo
+  - guardalo en formato `.png`.
+  - cambia el backend a `plotlyjs` e interactua un rato.
+3. Por que preferirias `Makie.jl` en vez de `Plots.jl`?
+  - Corre un demo de `Makie` en 3D y juega con los parametros. 
+  - Visita la `Makie gallery` y encuentra algo cool.
+4. Que es un API? Como lo puedes usar para descargar un CSV?
+```
+Para nosotros, un API para descargar datos simplemente pide una llamada de funcion con HTTP.jl y permite descargar datos.
+Se pueden ver com o
+using HTTP
+HTTP.get("https://datos.gob.mx/covid/salud/", key = "1234")
+# using Downloads
+
+```
+**NOTA**: Gran [acordeon de DataFrames.jl](https://www.ahsmart.com/assets/pages/data-wrangling-with-data-frames-jl-cheat-sheet/DataFramesCheatSheet_v0.22_rev1.pdf)
+- Interned Strings y `String15`
+- Trata de homogeneizar los tipos de datos de tus columnas: si tienes muchos `Union{X,Y,Z,A,B,...}` el compilador de Julia va a sufrir y  ademas va a ser lento el performance en run time.
+5. Como puedes cargar un `CSV` en Julia? Intenta con el [ejemplo del INEGI aqui](https://www.inegi.org.mx/sistemas/olap/consulta/general_ver4/MDXQueryDatos.asp?proy=). Un `CSV` es un archivo de valores separados por comas, ie `Comma Separated Values`.
+6. Ejemplo `FileTrees.jl` y `Glob.jl`
+  - define una funcion para contar todas las palabas separadas por `" "` en una cadena.
+  - aplicala a todo un directorio de manera recursiva con `FileTrees.jl`. Que solo cuente las palabras
+7. Cuando convienen `DataFrames.jl` y cuando conviene `SQL` (u otro tipo de base de datos) + la "ventaja Karaminski" en Julia.
+
+### OnlineStats.jl
+- TODO
+
+-----
+## Dia 06
+## Paralelismo y Metaprogramacion
+#### Repaso:
+- Mide antes de optimizar! Leer [este paper de COST](https://www.usenix.org/system/files/conference/hotos15/hotos15-paper-mcsherry.pdf)
+> Puedes tener varios cores hasta que demuestres que sabes usar uno solo
+- Demo: usando el [profiler de VSCode](https://www.julia-vscode.org/docs/dev/userguide/profiler/)
+
+```julia
+# Intenta correr este snippet de codigo dentro de VSCode
+function profile_test(n)
+    for i = 1:n
+        A = randn(100,100,20)
+        m = maximum(A)
+        Am = mapslices(sum, A; dims=2)
+        B = A[:,:,5]
+        Bsort = mapslices(sort, B; dims=1)
+        b = rand(100)
+        C = B.*b
+    end
+end
+
+# compilacion
+@profview profile_test(1)
+# runtime puro
+@profview profile_test(10)
+```
+#### Dudas:
+- 
+#### Propuestas de proyectos finales
+- Daniel y INEGI
+- Montse y optimizacion
+- Jesica y NLP
+- Arturo y procesamiento de covid en batch/paralelo
+
+## Paralelismo
+**Paralelismo a que nivel**?
+  - Inter Word Parallelism, Super Word Parallelism
+  ``01 01 01 01 01 01 01 01``
+  - Instruction pipelining
+  - Hyperthreading
+  - Atomics 
+  ```
+  x = 1
+  y = x + 1
+  ```
+  **NOTA**: *Seguridad*
+  - Multicore (usar muchos cores en una sola compu) 
+  - GPU/aceleradores (arquitectura heterogenea)
+  - Distribuido (muchas compus enchufadas)
+  *Cual creen que nos vamos a enfocar*?
+- Concurrencia 1:N: 1 trabajador puede 
+- Paralelismo y teoria
+  - Ejemplo a mano
+  - Camino critico
+  - Span
+  - Paralelismo
+    - Cilk, Futhark y multiversiones
+  - ["Task parallel, depth first, randomized work stealing scheduler"](https://julialang.org/blog/2019/07/multithreading/)
+    - Task parallel: "fork join"
+    ```julia
+    import Base.Threads.@spawn
+    function fib(n::Int)
+      if n < 2
+          return n
+      end
+      t = @spawn fib(n - 2)
+      return fib(n - 1) + fetch(t)
+    end
+    ```
+    - depth first:
+    - randomized work stealing:
+    - scheduler:
+
+### Ecosistema de paralelismo:
+- `Base.@threads`:
+- `ThreadsX.jl`:
+- `Folds.jl`:
+  - usando y sin usar `Folds.jl`, trata de resolver los siguientes ejercicios en tu equipo:
+    1. Genera una cadena de ~ 1M de caracteres aleatoriamente escogidos entre `!@#$` y cuenta cuantos son iguales a `#`.
+    2. Encuentra la primera secuencia igual a `!@#$`. Encuentra las entradas de indice igual a `!@#$`
+    3. Agrega 1 a un vector de de enteros de tamano 1M, con 20 tamanos logaritmicamente espaciados entre 100 y 1M. Cuando gana la version serial? Cuando la paralela? Que tamanio debe tener el vector para que tu benchmarking deje de ser superlineal?
+- Cuando te conviene `pmap` y cuando `@threads`?
+- Ver la [siguiente lecture](https://www.youtube.com/watch?v=JCvT9Rnhyvk) y encontrar 3 ejemplos en donde se aplican algoritmos tipo `parallel prefix sum`.
+
+**RESUMEN**: No hay una sola respuesta de como resolver el paralelismo (aun). Esta presentacion del [creador de Futhark](https://www.youtube.com/watch?v=QqOsJ0EwyrYO) es un buen resumen de por que es *tan* dificil hacer bien paralelismo.
+
+- Julia comparte el mismo tipo de tecnologia que `IntelTBB/Cilk` y `Rayon` de Rust con el scheduler, cuando usas `@spawn`
+- Julia comparte el mismo tipo de tecnologia (hoy) que `OpenMP` con `Base.@threads`.
 
 
+## Metaprogramacion
+Recuerda que siempre puedes ver [workshops/talleres de Julia](https://www.youtube.com/watch?v=2QLhw6LVaq0) en el canal de YouTube de Julia y leer [la parte del manual que te interesa](https://docs.julialang.org/en/v1/manual/metaprogramming/)
+1. Como defines una expresion en Julia? Para que usarias `quote begin ... end`?
+2. Define una expresion `x = 1`. Cambia el valor de `1` a `42` accesando la expresion. Evaluala.
+3. Que es un macro? Que restricciones tiene? Cuando corre?
+4. Que son los macros `_str`? Como usarias uno? Construge una expresion regular, un vector de bites, y una cadena literal con sus macros respectivos (recuerda que puedes usar `?"pancho"` en el prompt para buscar a pancho en los docstrings de Julia)
+5. Que es la higiene en los macros?
+6. (Dificil, salta esto y regresa al rato) Usa `MacroTools.jl` para definir un ejemplo de arboles de Linden (No olvides usar `Meta.@dump`)
+  - Un arbol de linden se ve asi:
+
+7. **Nota**: Nunca usar `Base.@pure`. 
+8. Entender que **casi no vale la pena** escribir [macros en Julia general](https://www.youtube.com/watch?v=mSgXWpvQEHE) - usa funciones!
+9. **BONUS**: Usa `SnoopCompile.jl` y `Cthulhu.jl` para 
+### Macros utiles:
+
+1. Define la siguiente funcion, y corre los siguientes macros:
+```julia
+f(x) = x^2
+```
+  - `Meta.@dump f(3)`
+    - `Meta.@lower f(3)`
+      - `@code_lowered f(3)`
+        - `@code_warntype f(3)`
+          - `@code_typed f(3)`
+            - `@code_llvm f(3)`
+              - `@code_native f(3)`
+2. Trata de dar ejemplos para usar los siguientes macros
+  - `@enter`, de `Debugger.jl`
+  - `@which`
+  - `@doc`
+  - `@elapsed`
+  - `@inbounds`
+  - `@simd`
+  - `@ndefs`
+  - `@nloops`
+  - `@views`
+  - `@.`
+  - `@test_broken`
 
 
 
@@ -491,3 +660,20 @@ julia> @time hamming(str1, str2)
   0.048103 seconds (70.13 k allocations: 3.883 MiB, 93.99% compilation time)
 500206
 ```
+
+TODO: GLOSARIO!
+1. Juliaup
+2. FileTrees.jl y procesamiento de contar palabras en un directorio
+3. VSCode plugin
+4. Revise
+4. Makie.jl
+5. Plots y cambiar de backend
+6. Programmacion funcional y benchmarking y 
+7. Franklin.jl y blog 
+8. Punto2D, tipos parametricos y performance
+9. PkgCompiler.jl
+10. JET.jl, Aqua.jl
+11. ThreadsX.jl y Folds.jl
+12. CUDA.jl y 
+13. Matriz de Strang, algebra lineal numerica
+14. sparse arrays y multiplicacion de ellos
