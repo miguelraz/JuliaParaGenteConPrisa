@@ -419,34 +419,48 @@ end
 # runtime puro
 @profview profile_test(10)
 ```
+- Al menos puedes usar `@time`/ `@btime`
 #### Dudas:
 - 
 #### Propuestas de proyectos finales
-- Daniel y INEGI
-- Montse y optimizacion
-- Jesica y NLP
-- Arturo y procesamiento de covid en batch/paralelo
+- Daniel y INEGI (DataFrames.jl + StasBase.jl)
+- Brenda y optimizacion en redes/grafos (Graphs.jl antes LightGraphs.jl)
+- Jesica y NLP 
+- Arturo y procesamiento de covid en batch/paralelo (Lecture de `parallel prefix sum` mas abajo y `FileTrees.jl`)
 
 ## Paralelismo
 **Paralelismo a que nivel**?
+  **NOTA**: Breviario cultural - [PaSH scripts de shell en paralelo](https://github.com/binpash/pash) 
+  Este es un gran lecture de donde se [inspiran estas notas](https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/resources/lecture-8-analysis-of-multithreaded-algorithms/).
   - Inter Word Parallelism, Super Word Parallelism
   ``01 01 01 01 01 01 01 01``
-  - Instruction pipelining
-  - Hyperthreading
+  - Instruction pipelining + `ports`: muchas cosas pueden operar al mismo tiempo
+  ```
+  v = v + 1
+  x = x + 1
+  y = y + 1
+  z = z + 1
+  ```
   - Atomics 
   ```
   x = 1
   y = x + 1
   ```
+  **NOTA**: No se preocupen todavia por usar `atomics`, `mutex`, o `locks`, `syncronizacion`
   **NOTA**: *Seguridad*
-  - Multicore (usar muchos cores en una sola compu) 
-  - GPU/aceleradores (arquitectura heterogenea)
-  - Distribuido (muchas compus enchufadas)
-  *Cual creen que nos vamos a enfocar*?
+  - Multicore (usar muchos cores en una sola compu) : en 1 sola compu, usar varios cores. 🎉🎉🎉 Este usaremos! 🎉🎉🎉
+  - Hyperthreading (no lo vamos a usar)
+  - GPU/aceleradores (arquitectura heterogenea) -> 🎉 Este usaremos! 🎉
+  - Distribuido (muchas compus enchufadas) -> Muchas compus trabajando en el mismo problema `Distributed.jl`.
+  *Cual creen que nos vamos a enfocar*? Multicore! 🎉
 - Concurrencia 1:N: 1 trabajador puede 
+  - Tiende a servir cuando esperas a los demas, ie, I/O y si el procesamiento es ligero.
+  - Contencion: que tanto distinto trabajadores/cores estan peleando por accesar un recurso.
 - Paralelismo y teoria
   - Ejemplo a mano
   - Camino critico
+    - Pregunta: Cual es la diferencia entre `Camino critico` y `seccion critica`?
+    Respuesta: La `seccion critica` tiene que ver con cuando queremos garantizar que exista acceso *unico* a un recurso. El `camino critico` es el *cuello de botella serial* de un algoritmo.
   - Span
   - Paralelismo
     - Cilk, Futhark y multiversiones
@@ -467,8 +481,11 @@ end
     - scheduler:
 
 ### Ecosistema de paralelismo:
-- `Base.@threads`:
+- `Base.@threads`: no es "composable", ie, no puedo usar `@threads` dentro de otro `@threads`.
+Sirve cuanto solo quieres dividir la chamba (que es igual para todos) entre todos tus cores.
 - `ThreadsX.jl`:
+- `LoopVectorization.jl`
+  - 
 - `Folds.jl`:
   - usando y sin usar `Folds.jl`, trata de resolver los siguientes ejercicios en tu equipo:
     1. Genera una cadena de ~ 1M de caracteres aleatoriamente escogidos entre `!@#$` y cuenta cuantos son iguales a `#`.
@@ -479,20 +496,38 @@ end
 
 **RESUMEN**: No hay una sola respuesta de como resolver el paralelismo (aun). Esta presentacion del [creador de Futhark](https://www.youtube.com/watch?v=QqOsJ0EwyrYO) es un buen resumen de por que es *tan* dificil hacer bien paralelismo.
 
-- Julia comparte el mismo tipo de tecnologia que `IntelTBB/Cilk` y `Rayon` de Rust con el scheduler, cuando usas `@spawn`
+- Julia comparte el mismo tipo de tecnologia que `IntelTBB/Cilk` y `Rayon` de Rust con el scheduler, cuando usas `@spawn`. El scheduler de `Go` usa un algoritmo de `breadth first`, en vez de `depth first`, el cual optimiza por casos de mucho I/O***.
 - Julia comparte el mismo tipo de tecnologia (hoy) que `OpenMP` con `Base.@threads`.
 
 
 ## Metaprogramacion
 Recuerda que siempre puedes ver [workshops/talleres de Julia](https://www.youtube.com/watch?v=2QLhw6LVaq0) en el canal de YouTube de Julia y leer [la parte del manual que te interesa](https://docs.julialang.org/en/v1/manual/metaprogramming/)
 1. Como defines una expresion en Julia? Para que usarias `quote begin ... end`?
+```julia
+ex = :(x = 1)
+ex = quote x = 1 end
+```
 2. Define una expresion `x = 1`. Cambia el valor de `1` a `42` accesando la expresion. Evaluala.
+```julia
+ex = :(x = 1) # recuerda Meta.@dump x = 1
+ex.args[2] = 42
+ex
+```
 3. Que es un macro? Que restricciones tiene? Cuando corre?
+```
+Un macro es un tipo de funcion especial que
+1. recibe una `Expr`
+2. la manipula
+3. regresa otra `Expr`
+4. Corre al tiempo del `parser`
+```
 4. Que son los macros `_str`? Como usarias uno? Construge una expresion regular, un vector de bites, y una cadena literal con sus macros respectivos (recuerda que puedes usar `?"pancho"` en el prompt para buscar a pancho en los docstrings de Julia)
-5. Que es la higiene en los macros?
-6. (Dificil, salta esto y regresa al rato) Usa `MacroTools.jl` para definir un ejemplo de arboles de LindenMayer (No olvides usar `Meta.@dump`)
+5. Que es la [higiene en los macros](https://www.youtube.com/watch?v=JePBb9-ychE)?
+```
+Los macros definen variables que se resuelven (o valen) en un `module` distinto al global, es suyo propio, para evitar el choque de nombres.
+```
+6. (Dificil, salta esto y regresa al rato) Usa `MacroTools.jl` para definir un ejemplo de arboles de LindenMayer (No olvides usar `Meta.@dump` y `@macroexpand`). 
   - Un arbol de linden se ve asi:
-  - x -> 
 
 7. **Nota**: Nunca usar `Base.@pure`. 
 8. Entender que **casi no vale la pena** escribir [macros en Julia general](https://www.youtube.com/watch?v=mSgXWpvQEHE) - usa funciones!
@@ -503,30 +538,34 @@ Recuerda que siempre puedes ver [workshops/talleres de Julia](https://www.youtub
 ```julia
 f(x) = x^2
 ```
-  - `Meta.@dump f(3)`
-    - `Meta.@lower f(3)`
+  - `Meta.@dump f(3)` # AST
+    - `Meta.@lower f(3)` # Lowered
       - `@code_lowered f(3)`
         - `@code_warntype f(3)`
-          - `@code_typed f(3)`
-            - `@code_llvm f(3)`
+          - `@code_typed f(3)` # Typed
+            - `@code_llvm f(3)` # Optimizando...
+              - (Aqui sucede la magia de optimizaciones de LLVM)
               - `@code_native f(3)`
 2. Trata de dar ejemplos para usar los siguientes macros
   - `@enter`, de `Debugger.jl`
-  - `@warn`
+  ```julia
+
+  ```
+  - `@warn` - arroja una advertencia
   - `@show`
   - `@info`
   - `@log`
-  - `@which`
-  - `@doc`
-  - `@elapsed`
-  - `@inbounds`
-  - `@simd`
-  - `@ndefs`
-  - `@nloops`
-  - `@views`
-  - `@.`
-  - `@test_broken`
-
+  - `@which` - ensenia que metodo aplica `@which 3+ 3`
+  - `@doc` - ensenia docstrings y los puede anadir a una funcion
+  - `@elapsed` - cuanto tiempo ha transcurrido
+  - `@inbounds` - quita el `bounds checking`
+  - `@simd` - ~trata de forzar la vectorizacion de tu codigo, usa en vez `LoopVectorization.jl` y su `@turbo`.
+  - `@nexprs` - bendito sea Cthulhu que ya no escribo `Fortran`!
+  - `@nloops` - algebra multidimensional lineal!
+  - `@views` - para cuando usas slices `x[:] = a[:] + b[:]` del lado derecho de una igualdad, ahorra las copias.
+  - `@.` - Broadcast toda una expresion sin tener que usar `.*` todo el tiempo.
+  - `@test_broken`, `@test_throws`
+3. Define una expresion de `for` y usa `push!` para definir algo interesante
 
 
 
@@ -694,3 +733,5 @@ TODO: GLOSARIO!
 12. CUDA.jl y 
 13. Matriz de Strang, algebra lineal numerica
 14. sparse arrays y multiplicacion de ellos
+15. Compartiendo un MWE en Discourse/Slack/Zulip/Forem?
+
