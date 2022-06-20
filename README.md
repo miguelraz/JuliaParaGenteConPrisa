@@ -376,6 +376,18 @@ HTTP.get("https://datos.gob.mx/covid/salud/", key = "1234")
   - define una funcion para contar todas las palabas separadas por `" "` en una cadena.
   - aplicala a todo un directorio de manera recursiva con `FileTrees.jl`. Que solo cuente las palabras
 7. Cuando convienen `DataFrames.jl` y cuando conviene `SQL` (u otro tipo de base de datos) + la "ventaja Karaminski" en Julia.
+ ```sql
+ SELECT *
+ FROM gente
+ WHERE gente >= 10
+ ```
+ - SQL:
+  - permite guardar tus datos en casos de catastrofe
+  - optimiza la cantidad de veces que uno "va a disco"
+  - tiene medidas para prevenir corrupcion de datos
+  - medidas de seguridad para encriptar los archivos y restringir acceso
+  NOTA: checar el curso de [Andy Pavlo de CMU](https://www.youtube.com/watch?v=SdW5RKUboKc)
+
 
 ### OnlineStats.jl
 - TODO
@@ -478,8 +490,9 @@ Recuerda que siempre puedes ver [workshops/talleres de Julia](https://www.youtub
 3. Que es un macro? Que restricciones tiene? Cuando corre?
 4. Que son los macros `_str`? Como usarias uno? Construge una expresion regular, un vector de bites, y una cadena literal con sus macros respectivos (recuerda que puedes usar `?"pancho"` en el prompt para buscar a pancho en los docstrings de Julia)
 5. Que es la higiene en los macros?
-6. (Dificil, salta esto y regresa al rato) Usa `MacroTools.jl` para definir un ejemplo de arboles de Linden (No olvides usar `Meta.@dump`)
+6. (Dificil, salta esto y regresa al rato) Usa `MacroTools.jl` para definir un ejemplo de arboles de LindenMayer (No olvides usar `Meta.@dump`)
   - Un arbol de linden se ve asi:
+  - x -> 
 
 7. **Nota**: Nunca usar `Base.@pure`. 
 8. Entender que **casi no vale la pena** escribir [macros en Julia general](https://www.youtube.com/watch?v=mSgXWpvQEHE) - usa funciones!
@@ -499,6 +512,10 @@ f(x) = x^2
               - `@code_native f(3)`
 2. Trata de dar ejemplos para usar los siguientes macros
   - `@enter`, de `Debugger.jl`
+  - `@warn`
+  - `@show`
+  - `@info`
+  - `@log`
   - `@which`
   - `@doc`
   - `@elapsed`
