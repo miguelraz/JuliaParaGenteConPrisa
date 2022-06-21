@@ -569,158 +569,49 @@ f(x) = x^2
 
 
 
+## Dia 07
+### Proyectos de curso y graficas con Graph.jl
+- Para que su codigo sea vea re-chulo, usen [JuliaMono](https://juliamono.netlify.app/) y pongan las `ligatures` en activo.
+-----
+**DEMO** de `ligatures`
+----
+* Dudas y resolucion de problemas
 
-
-### Ultimo ejemplo del dia 2
-```julia-repl
-julia> str1 = rand('a':'b', 1_000_000)
-1000000-element Vector{Char}:
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- ⋮
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
-
-julia> str1 = rand('a':'b', 1_000_000) }
-ERROR: syntax: extra token "}" after end of expression
-Stacktrace:
- [1] top-level scope
-   @ none:1
-
-julia> str1 = rand('a':'b', 1_000_000) |> collect
-1000000-element Vector{Char}:
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- ⋮
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
- 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)
-julia> function hamming(a, b)
-           cuenta = 0
-           for i in 1:length(a)
-               if a[i] != b[i]
-                   cuenta = cuenta + 1
-               end
-           end
-           cuenta
-       end
-hamming (generic function with 1 method)
-
-julia> @time hamming(str1, str2)
-  0.017782 seconds (19.54 k allocations: 1.074 MiB, 80.88% compilation time)
-500206
-
-julia> @time hamming(str1, str2)
-  0.006020 seconds (1 allocation: 16 bytes)
-500206
-
-julia> function hamming(a, b)
-           cuenta = 0
-           for i in 1:length(a)
-               if a[i] != b[i]
-                   cuenta += 1
-               end
-           end
-           cuenta
-       end
-hamming (generic function with 1 method)
-
-julia> @time hamming(str1, str2)
-  0.024201 seconds (19.54 k allocations: 1.074 MiB, 82.83% compilation time)
-500206
-
-julia> @time hamming(str1, str2)
-  0.005971 seconds (1 allocation: 16 bytes)
-500206
-
-julia> function hamming(a, b)
-           cuenta = 0
-           for i in 1:length(a)
-               cuenta += a[i] != b[i]
-           end
-           cuenta
-       end
-hamming (generic function with 1 method)
-
-julia> @time hamming(str1, str2)
-  0.025691 seconds (20.98 k allocations: 1.147 MiB, 80.71% compilation time)
-500206
-
-julia> @time hamming(str1, str2)
-  0.005501 seconds (1 allocation: 16 bytes)
-500206
-
-julia> function hamming(a, b)
-           cuenta = 0
-           for i in 1:length(a)
-               cuenta += a[i] != b[i]
-           end
-           cuenta
-       end
-hamming (generic function with 1 method)
-
-julia> hamming(a, b) = sum(a[i] != b[i] for i in 1:length(a))
-hamming (generic function with 1 method)
-
-julia> @time hamming(str1, str2)
-  0.067357 seconds (140.48 k allocations: 7.673 MiB, 83.16% compilation time)
-500206
-
-julia> @time hamming(str1, str2)
-  0.018335 seconds (1 allocation: 16 bytes)
-500206
-
-julia> hamming(a, b) = sum(((x,y),) -> x != y, zip(a, b))
-hamming (generic function with 1 method)
-
-julia> @time hamming(str1, str2)
-  0.123288 seconds (345.78 k allocations: 18.346 MiB, 32.82% gc time, 97.97% compilation time)
-500206
-
-julia> @time hamming(str1, str2)
-  0.005333 seconds (1 allocation: 16 bytes)
-500206
-
-julia> hamming(a, b) = mapreduce(!=, +, a, b)
-hamming (generic function with 1 method)
-
-julia> @time hamming(str1, str2)
-  0.048103 seconds (70.13 k allocations: 3.883 MiB, 93.99% compilation time)
-500206
+### Graphs.jl
+#### Calentando motores
+Hoy vamos a seguir (tanto como podamos) el [workshop de LightGraphs.jl (Ahora Graphs.jl)](https://www.youtube.com/watch?v=K3z0kUOBy2Y) encontrado en [este repositorio](https://github.com/matbesancon/lightgraphs_workshop)
+1. Que es un nodo? Que es una arista? Que es un sucesor? Que es un vecino? Que es un sucesor? Que es una grafica?
+2. Define una grafica simple con 3 nodos y 3 vertices entre ellos.
+3. Muestra su matriz de adyacencia
+4. Grafica una grafica bipartita con tamanio `(2,2)` aleatoreamente generada.
+5. Usa `Base.summarysize` para saber cuanto pesa un `Vector{Int}` vacio y un `Set{Int}` vacio. 
+6. Describe los campos de una grafica simple `SimpleGraph{Int}`. Por que hay redundancia?
+7. Compara el tiempo de creacion de una grafica `SimpleGraph` de tamanios `10` a `10000` en potencias de `10`.
+8. Genera una grafica complete de tamanio `10`.
+9. Que es una grafica dirigida? Genera de tamanio 13, y graficala.
+10. Que es mas facil: recorrer todos los sucesores de un nodo o todos sus sucesores?
+11. Genera una grafica ciclica de tamanio 4
+12. Construye una grafica dirigida simple con la matriz
 ```
+0 1 1 0
+0 0 1 0
+0 0 0 0
+0 0 1 0
+```
+13. Genera una grafica lineal de un iterador por medio de `SimpleGraphFromIterator` y graficala. 
+13. Da ejemplos de las funciones `nv`, `neighbors`, 
 
+#### Mas tipos de graficas y algoritmos clasicos
+1. Observa todos los tipos de graficas en `smallgraph`. Recolecta sus aristas con `edges(g) |> collect`.
+2. Que es una grafica aciclica? Que es un arbol? Que es un `arbol de expansion minimo`? Calcula usando `primm_mst`
+
+
+#### Capsulas a hacer: Joyas de Julia
+**Tarea para Miguel**: Yo me comprometo a hacer videocapsulas de los siguientes temas:
 TODO: GLOSARIO!
-1. Juliaup
+1. Juliaup y manejando distintas versiones de Julia en una sola maquina
 2. FileTrees.jl y procesamiento de contar palabras en un directorio
-3. VSCode plugin
+3. VSCode plugin: Instalacion, uso, testing, desarrollo
 4. Revise
 4. Makie.jl
 5. Plots y cambiar de backend
@@ -734,4 +625,6 @@ TODO: GLOSARIO!
 13. Matriz de Strang, algebra lineal numerica
 14. sparse arrays y multiplicacion de ellos
 15. Compartiendo un MWE en Discourse/Slack/Zulip/Forem?
+16. JuliaMono y ligatures
+17. `rand()` y features del `RNG`
 
