@@ -622,10 +622,6 @@ g = complete_bipartite_graph(2, 2)
 Base.summarysize(Int[]) == 40
 Base.summarysize(Set{Int}()) == 336
 ```
-6. Describe los campos de una grafica simple `SimpleGraph{Int}`. Por que hay redundancia?
-```
-Para favorecer ciertos casos/iteraciones algoritmicamente via despacho multiple
-```
 7. Compara el tiempo de creacion de una grafica `SimpleGraph` de tamanios `10` a `10000` en potencias de `10`.
 ```julia
 for i in (10, 100, 1000)
@@ -641,10 +637,38 @@ g = complete_graph(10)
 Una grafica dirigida es una grafica en donde la direccion de las aristas importa: si sale una arista de 1 a 2, se dice que 1 es el antecesor de 2, y 2 es el sucesor de 1. Tambien puedes tener una arista que salga de 2 a 1.
 ```
 ```julia
-
+g = SimpleDiGraph(5)
+add_edge!(g, 1 => 2)
+add_edge!(g, 1 => 3)
+add_edge!(g, 3 => 1)
+# tip: intenta agregar un nodo a si mismo
+```
+6. Describe los campos de una grafica simple `SimpleDiGraph{Int}`. Por que hay redundancia?
+```
+Para favorecer ciertos casos/iteraciones algoritmicamente via despacho multiple - 
 ```
 10. Que es mas facil: recorrer todos los sucesores de un nodo o todos sus sucesores?
-11. Genera una grafica ciclica de tamanio 4
+```
+Depende el sapo la pedrada.
+`g.fadjlist` es para "forward adjacency list" y `g.badjlist` es para "backward adjacency list"
+```
+11. Genera una grafica ciclica de tamanio 5. Plottea los casos de todos los ejemplos de `complete_*`.
+```julia
+g = complete_graph(5)
+gplot(g, nodelabel = vertices(g))
+```
+```julia
+g = complete_bipartite_graph(3,5)
+gplot(g, nodelabel = vertices(g))
+```
+```julia
+g = complete_digraph(5)
+gplot(g, nodelabel = vertices(g))
+```
+```julia
+g = complete_multipartite_graph(1:5)
+gplot(g, nodelabel = vertices(g))
+```
 12. Construye una grafica dirigida simple con la matriz
 ```
 0 1 1 0
@@ -652,8 +676,13 @@ Una grafica dirigida es una grafica en donde la direccion de las aristas importa
 0 0 0 0
 0 0 1 0
 ```
+```julia
+
+```
 13. Genera una grafica lineal de un iterador por medio de `SimpleGraphFromIterator` y graficala. 
-13. Da ejemplos de las funciones `nv`, `neighbors`, 
+14. Da ejemplos de las funciones `nv`, `neighbors`, 
+15. Calcula los componentes conectados de una grafica `g` de tu interes. Ahora usa los `strongly_connected_components` en una grafica dirigida
+
 
 #### Mas tipos de graficas y algoritmos clasicos
 1. Observa todos los tipos de graficas en `smallgraph`. Recolecta sus aristas con `edges(g) |> collect`.
