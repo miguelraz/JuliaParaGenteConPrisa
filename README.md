@@ -596,11 +596,11 @@ Grafica* - {Nodes x Vertices}, en ingles le dicen "Graph = {Nodes x Edges}"
 ```julia
 g = SimpleGraph(0)
 for i in 1:3
-  add_node!(g)
+  add_vertex!(g)
 end
-add_vertex!(g, 1 => 2)
-add_vertex!(g, 2 => 3)
-add_vertex!(g, 3 => 1)
+add_edge!(g, 1 => 2)
+add_edge!(g, 2 => 3)
+add_edge!(g, 3 => 1)
 
 # Para graficar:
 using Random, Cairo, Fontconfig, Graphplot
