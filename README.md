@@ -603,7 +603,7 @@ add_edge!(g, 2 => 3)
 add_edge!(g, 3 => 1)
 
 # Para graficar:
-using Random, Cairo, Fontconfig, Graphplot
+using Random, Cairo, Fontconfig, GraphPlot
 g = complete_bipartite_graph(2, 2)
 Random.seed!(42)
 gplot(g, nodelabel=vertices(g))
@@ -677,26 +677,62 @@ gplot(g, nodelabel = vertices(g))
 0 0 1 0
 ```
 ```julia
-
+gplot(SimpleGraph([
+  0 1 1 0
+  0 0 1 0
+  0 0 0 0
+  0 0 1 0
+]))
 ```
 13. Genera una grafica lineal de un iterador por medio de `SimpleGraphFromIterator` y graficala. 
+```spoiler
+```julia
+iter = (Edge(i, i+1) for i in ???)
+```
+```
+```julia
+iter = (Edge(i, i+1) for i in 1:4)
+g = SimpleGraphFromIterator(iter)
+gplot(g, nodelabels = vertices(g))
+```
 14. Da ejemplos de las funciones `nv`, `neighbors`, 
 15. Calcula los componentes conectados de una grafica `g` de tu interes. Ahora usa los `strongly_connected_components` en una grafica dirigida
+16. Investiga si alguno de los algoritmos en `Graphs.Parallel.<TAB>` te sirven para agilizar un codigo.
 
 
 #### Mas tipos de graficas y algoritmos clasicos
 1. Observa todos los tipos de graficas en `smallgraph`. Recolecta sus aristas con `edges(g) |> collect`.
-2. Que es una grafica aciclica? Que es un arbol? Que es un `arbol de expansion minimo`? Calcula usando `primm_mst`
+```julia
+gplot(smallgraph("house"))
+gplot(smallgraph("petersen"))
+gplot(smallgraph("tutte"))
+gplot(smallgraph("sedgewickmaze"))
+gplot(smallgraph(:karate))
+```
+2. Que es un camino? Que es un camino Hamiltoniano? Que es una grafica aciclica? Que es un arbol? Que es un `arbol de expansion minimo`? Calcula usando `primm_mst`
+```
+Un camino es una sucesion de nodos conectados por aristas dirigidas en donde solo se sigue la direccion de la arista.
+Una grafica aciclica es una grafica en donde todas los nodos nunca pueden visitarse a si mismos siguiendo todos los posibles caminos que salen de ellos mismos.
+Un camino Hamiltoniano es un camino que puede visitar todos los nodos de una grafica conexa sin repetir nodos. 
+Un arbol es una grafica aciclica en donde 1 solo nodo (llamado raiz) puede visitar a todos los demas nodos por medio de caminos
+```
 3. Encuentra como llamar los siguientes algoritmos en una grafica de tu interes:
   - Dijkstra
   - A*
   - Prim
   - Bellman-Ford
   - Floyd-Warshall
-  - 
+```julia
+
+```
 4. Carga un dataset con `GraphsIO.jl` y `SNAPDatasets.jl`. Corre un algoritmo de tu interes y benchmarkealo
 5. Define `g = smallgraph(:diamond)` y guardalo con `GraphIO.savegraph` (busca en los docs como se usa)
 6. Que es `GraphBLAS`? Que es `SuiteSparseGraphBLAS`? Como puedes usarlo en Julia?
+**NOTA**: BLAS significa "Basic Linear Algebra Subroutines" y existen desde hace 6 anios y todos las usan.
+```julia
+# Trabajo de Dr. Tim Davis (experto en algebra lineal sparse) y Will Kimmerer es el que lo ha traido a Julia
+using SuiteSparseGraphBLAS
+```
 
 
 
@@ -722,4 +758,7 @@ TODO: GLOSARIO!
 16. JuliaMono y ligatures
 17. `rand()` y features del `RNG`
 18. Ventaja de Julia: Graphs.jl y GraphBLAS y SparseGraphBLAS 
+19. Jack Dongarra, BLAS benchmarks, Octavian.jl, LoopVectorization.jl
+20. Cuando intersectar/buscar con un vector es mas rapido que en un Set
+21. Notebook de Jakob Nissen
 
