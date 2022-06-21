@@ -579,16 +579,70 @@ f(x) = x^2
 
 ### Graphs.jl
 #### Calentando motores
+
 Hoy vamos a seguir (tanto como podamos) el [workshop de LightGraphs.jl (Ahora Graphs.jl)](https://www.youtube.com/watch?v=K3z0kUOBy2Y) encontrado en [este repositorio](https://github.com/matbesancon/lightgraphs_workshop)
+**NOTA**: Hay documentacion que menciona `LightGraphs.jl` - eso yo no existe, usen `Graphs.jl` - deberia ser 100% compatible.
 1. Que es un nodo? Que es una arista? Que es un sucesor? Que es un vecino? Que es un sucesor? Que es una grafica?
+```
+Nodos son los "puntos"
+vertices son las lineas que los conectan
+Vecino - si 2 nodos estan conectados por 1 arista, son vecinos
+Sucesor - Si 1 arista sale de un nodo y llega a otro, al que le llega la arista es el sucesor
+Grafica* - {Nodes x Vertices}, en ingles le dicen "Graph = {Nodes x Edges}"
+*Grafica simple:
+```
+1.5 - Instala `Graphs.jl` con `using Pkg; Pkg.add("Graphs.jl")`
 2. Define una grafica simple con 3 nodos y 3 vertices entre ellos.
-3. Muestra su matriz de adyacencia
+```julia
+g = SimpleGraph(0)
+for i in 1:3
+  add_node!(g)
+end
+add_vertex!(g, 1 => 2)
+add_vertex!(g, 2 => 3)
+add_vertex!(g, 3 => 1)
+
+# Para graficar:
+using Random, Cairo, Fontconfig, Graphplot
+g = complete_bipartite_graph(2, 2)
+Random.seed!(42)
+gplot(g, nodelabel=vertices(g))
+```
+3. Muestra su matriz de adyacencia y su espectro de adjacencia
+```julia
+adjacency_matrix(g)
+adjancency_spectrum(g)
+```
 4. Grafica una grafica bipartita con tamanio `(2,2)` aleatoreamente generada.
+```julia
+g = complete_bipartite_graph(2, 2)
+```
 5. Usa `Base.summarysize` para saber cuanto pesa un `Vector{Int}` vacio y un `Set{Int}` vacio. 
+```julia
+Base.summarysize(Int[]) == 40
+Base.summarysize(Set{Int}()) == 336
+```
 6. Describe los campos de una grafica simple `SimpleGraph{Int}`. Por que hay redundancia?
+```
+Para favorecer ciertos casos/iteraciones algoritmicamente via despacho multiple
+```
 7. Compara el tiempo de creacion de una grafica `SimpleGraph` de tamanios `10` a `10000` en potencias de `10`.
+```julia
+for i in (10, 100, 1000)
+  @btime SimpleGraph(i)
+end
+```
 8. Genera una grafica complete de tamanio `10`.
+```julia
+g = complete_graph(10)
+```
 9. Que es una grafica dirigida? Genera de tamanio 13, y graficala.
+```
+Una grafica dirigida es una grafica en donde la direccion de las aristas importa: si sale una arista de 1 a 2, se dice que 1 es el antecesor de 2, y 2 es el sucesor de 1. Tambien puedes tener una arista que salga de 2 a 1.
+```
+```julia
+
+```
 10. Que es mas facil: recorrer todos los sucesores de un nodo o todos sus sucesores?
 11. Genera una grafica ciclica de tamanio 4
 12. Construye una grafica dirigida simple con la matriz
@@ -604,6 +658,17 @@ Hoy vamos a seguir (tanto como podamos) el [workshop de LightGraphs.jl (Ahora Gr
 #### Mas tipos de graficas y algoritmos clasicos
 1. Observa todos los tipos de graficas en `smallgraph`. Recolecta sus aristas con `edges(g) |> collect`.
 2. Que es una grafica aciclica? Que es un arbol? Que es un `arbol de expansion minimo`? Calcula usando `primm_mst`
+3. Encuentra como llamar los siguientes algoritmos en una grafica de tu interes:
+  - Dijkstra
+  - A*
+  - Prim
+  - Bellman-Ford
+  - Floyd-Warshall
+  - 
+4. Carga un dataset con `GraphsIO.jl` y `SNAPDatasets.jl`. Corre un algoritmo de tu interes y benchmarkealo
+5. Define `g = smallgraph(:diamond)` y guardalo con `GraphIO.savegraph` (busca en los docs como se usa)
+6. Que es `GraphBLAS`? Que es `SuiteSparseGraphBLAS`? Como puedes usarlo en Julia?
+
 
 
 #### Capsulas a hacer: Joyas de Julia
@@ -627,4 +692,5 @@ TODO: GLOSARIO!
 15. Compartiendo un MWE en Discourse/Slack/Zulip/Forem?
 16. JuliaMono y ligatures
 17. `rand()` y features del `RNG`
+18. Ventaja de Julia: Graphs.jl y GraphBLAS y SparseGraphBLAS 
 
