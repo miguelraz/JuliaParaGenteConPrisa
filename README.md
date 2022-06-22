@@ -762,12 +762,15 @@ using SuiteSparseGraphBLAS
 5. Usa `Latexify.jl` para imprimir una matriz simbolica y pegala en otro lugar usando `clipboard`.
 6. **BONUS**: Investiga como usaron `Symbolics.jl` para su tecnica de ["sparsity detection".](https://openreview.net/pdf?id=rJlPdcY38B). Moraleja - combinar el mundo numerico y simbolico lleva a ventajas algoritmicas que los Fortraneros nunca sonarian.
 ### Ecuaciones diferenciales
-- Resuelve el atractor de Lorenz con el solver `Tsit5`.
+- Que es el atractor de Lorenz? Resuelve el atractor de Lorenz con el solver `Tsit5`. Intenta utilizar el macro `@ode_def`.
+- **BONUS** plottea varias trayectorias para convencerte de su comportamiento caotico.
+- Que es el modelo de Lotka-Volterra? Encuentra, resuelve, y plottea el model de Lotka-Volterra. Lo puedes hacer con emojis? 
 ```spoiler
-
+Si se puede, busca en el manual 💃
 ```
-- Cantidad de Solvers de RK4
-- Modelos surrogados
+- Encuentra la mayor cantidad de Solvers estilo diferencias finitas.
+- Que es un modelo "surrogado"? Corre uno de tu interes con [Surrogates.jl](https://surrogates.sciml.ai/dev/abstractgps/) y compara su perfromance y precision
+
 
 ### Flux.jl
 #### Recursos:
