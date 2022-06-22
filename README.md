@@ -761,7 +761,9 @@ using SuiteSparseGraphBLAS
 4. Como es distinto el computo simbolico de usar `BigInt`s?
 5. Usa `Latexify.jl` para imprimir una matriz simbolica y pegala en otro lugar usando `clipboard`.
 6. **BONUS**: Investiga como usaron `Symbolics.jl` para su tecnica de ["sparsity detection".](https://openreview.net/pdf?id=rJlPdcY38B). Moraleja - combinar el mundo numerico y simbolico lleva a ventajas algoritmicas que los Fortraneros nunca sonarian.
+-----
 ### Ecuaciones diferenciales
+Instala `DifferentialEquations.jl` - se va a tardar un rato.
 - Que es el atractor de Lorenz? Resuelve el atractor de Lorenz con el solver `Tsit5`. Intenta utilizar el macro `@ode_def`.
 - **BONUS** plottea varias trayectorias para convencerte de su comportamiento caotico.
 - Que es el modelo de Lotka-Volterra? Encuentra, resuelve, y plottea el model de Lotka-Volterra. Lo puedes hacer con emojis? 
