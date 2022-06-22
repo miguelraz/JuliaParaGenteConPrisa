@@ -743,29 +743,59 @@ using SuiteSparseGraphBLAS
 - Noel y Laplace?
 - Jesica y cargar datos?
 ### Recursos:
-- Learning from Data de Gilbert Strang
-- Parallel and Scientific Machine Learning
-- Introduction to Computational Thinking
+- [Learning from Data de Gilbert Strang](https://math.mit.edu/~gs/learningfromdata/)
+- [Parallel Computing and Scientific Machine Learning](https://mitmath.github.io/18337/)
+- [Introduction to Computational Thinking](https://computationalthinking.mit.edu/Spring21/)
 
 ### Computo Simbolico con Symbolics.jl
 ####  Recursos
 - [Repositorio de Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl)
 - [Platica de JuliaCon](https://www.youtube.com/watch?v=Vkz4c-lDMU8)
+0. Instala `Symbolics.jl` con `using Pkg; Pkg.add("Symbolics")`.
 1. Define unas dos variables `x` y `y` simbolicamente. Usa Julia para confirma las formulas de sumas y diferencia de cuadrados:
 ```julia
-(x - y) * (x + y) == # ?
-(x + y) * (x * y) == # ?
+@vars x y
+ex = (x - y) * (x + y)
+simplify(ex, expand = true)
+(x - y) * (x + y) == x^2 - (y^2)
+(x + y) * (x * y) == x^2 + y^2 + 2x*y
+simplify((x+y)^2, expand = true)
 ```
 2. Usa `Symbolics.jl` para simplificar la espresion `sin^2(x) + cos^2(x)`.
+```julia
+ex = cos(x)^2 + sin(x)^2
+simplify(ex)
+```
 3. Define una funcion como `f(x) = 3x^2` y toma su derivada
+```julia
+@vars x
+D = Differential(x)
+expand_derivatives(3x^2)
+```
 4. Como es distinto el computo simbolico de usar `BigInt`s?
+```julia
+Symbolics trata de representar el concepto matematico de un numero, no su implementacion per se.
+```
 5. Usa `Latexify.jl` para imprimir una matriz simbolica y pegala en otro lugar usando `clipboard`.
+```julia
+@vars x
+m = [1 cos(x); sin(x) -1]
+latexify(m, clipboard = true)
+```
 6. **BONUS**: Investiga como usaron `Symbolics.jl` para su tecnica de ["sparsity detection".](https://openreview.net/pdf?id=rJlPdcY38B). Moraleja - combinar el mundo numerico y simbolico lleva a ventajas algoritmicas que los Fortraneros nunca sonarian.
+7. Como difiere `Symbolics.jl` de SymPy? Y de Mathematica? Lee el [manual para saber mas](https://symbolics.juliasymbolics.org/stable/comparison/).
+8. Si te late la teoria de categorias, checa [Catlab.jl](https://algebraicjulia.github.io/Catlab.jl/dev/)
 -----
 ### Ecuaciones diferenciales
-Instala `DifferentialEquations.jl` - se va a tardar un rato.
+1. Instala `DifferentialEquations.jl` - se va a tardar un rato.
+2. Compara tu solver de ecuaciones diferenciales favorito vs `DifferentialEquations.jl` en [esta tabla](https://www.stochasticlifestyle.com/comparison-differential-equation-solver-suites-matlab-r-julia-python-c-fortran/) del Dr. Chris Rackauckas.
 - Que es el atractor de Lorenz? Resuelve el atractor de Lorenz con el solver `Tsit5`. Intenta utilizar el macro `@ode_def`.
+```julia
+using DifferentialEquations
+
+```
 - **BONUS** plottea varias trayectorias para convencerte de su comportamiento caotico.
+- **TAREA**: Si no te gustan mis preguntas, completa cualquiera de los [siguientes tutoriales de SciML](https://tutorials.sciml.ai/).
 - Que es el modelo de Lotka-Volterra? Encuentra, resuelve, y plottea el model de Lotka-Volterra. Lo puedes hacer con emojis? 
 ```spoiler
 Si se puede, busca en el manual 💃
@@ -778,8 +808,8 @@ Si se puede, busca en el manual 💃
 #### Recursos:
 - [Repositorio de Flux.jl](https://fluxml.ai/)
 1. Escoge un tutorial de `Flux.jl` y siguelo lo mejor que puedas. Los puedes encontrar [aqui](https://fluxml.ai/tutorials/2021/01/26/mlp.html)
-2.
-
+2. Que es la diferenciacion automatica? Como puedo derivar una catapulta?
+3. Picarle a la [documentacion de Flux.jl](https://fluxml.ai/Flux.jl/dev/models/overview/) y llevar un curso de Deep Learning. Volverse mesias tecnologico y comprar la casa en Bahamas.
 
 ------
 #### Capsulas a hacer: Joyas de Julia
@@ -810,4 +840,6 @@ TODO: GLOSARIO!
 21. **Notebook de Jakob Nissen**
 22. Arrow, DataFrames,
 23. SuiteSparseGraphBLAS example
+24. Julia y [Arduino](https://twitter.com/arduino/status/1539594946801537025?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Etweet%7Ctwtr%5Etrue)
+25. Como hacer un issue en github a un repo de Julia
 
