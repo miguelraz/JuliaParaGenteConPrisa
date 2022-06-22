@@ -734,15 +734,56 @@ Un arbol es una grafica aciclica en donde 1 solo nodo (llamado raiz) puede visit
 using SuiteSparseGraphBLAS
 ```
 
+## Dia 08: Computo Simbolico, Ecuaciones diferenciales con DifferentialEquations.jl y DeepLearning con Flux.jl
+### Repaso, dudas, y proyectos, breviario cultural
+- Ada Lovelace, tejidos, proto ensamblador
+- encuesta
+- Proyecto de Arturo, mencionar Arrow.jl
+- Brenda?
+- Noel y Laplace?
+- Jesica y cargar datos?
+### Recursos:
+- Learning from Data de Gilbert Strang
+- Parallel and Scientific Machine Learning
+- Introduction to Computational Thinking
+
+### Computo Simbolico con Symbolics.jl
+####  Recursos
+- [Repositorio de Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl)
+- [Platica de JuliaCon](https://www.youtube.com/watch?v=Vkz4c-lDMU8)
+1. Define unas dos variables `x` y `y` simbolicamente. Usa Julia para confirma las formulas de sumas y diferencia de cuadrados:
+```julia
+(x - y) * (x + y) == # ?
+(x + y) * (x * y) == # ?
+```
+2. Usa `Symbolics.jl` para simplificar la espresion `sin^2(x) + cos^2(x)`.
+3. Define una funcion como `f(x) = 3x^2` y toma su derivada
+4. Como es distinto el computo simbolico de usar `BigInt`s?
+5. Usa `Latexify.jl` para imprimir una matriz simbolica y pegala en otro lugar usando `clipboard`.
+6. **BONUS**: Investiga como usaron `Symbolics.jl` para su tecnica de ["sparsity detection".](https://openreview.net/pdf?id=rJlPdcY38B). Moraleja - combinar el mundo numerico y simbolico lleva a ventajas algoritmicas que los Fortraneros nunca sonarian.
+### Ecuaciones diferenciales
+- Resuelve el atractor de Lorenz con el solver `Tsit5`.
+```spoiler
+
+```
+- Cantidad de Solvers de RK4
+- Modelos surrogados
+
+### Flux.jl
+#### Recursos:
+- [Repositorio de Flux.jl](https://fluxml.ai/)
+1. Escoge un tutorial de `Flux.jl` y siguelo lo mejor que puedas. Los puedes encontrar [aqui](https://fluxml.ai/tutorials/2021/01/26/mlp.html)
+2.
 
 
+------
 #### Capsulas a hacer: Joyas de Julia
 **Tarea para Miguel**: Yo me comprometo a hacer videocapsulas de los siguientes temas:
 TODO: GLOSARIO!
 1. Juliaup y manejando distintas versiones de Julia en una sola maquina
 2. FileTrees.jl y procesamiento de contar palabras en un directorio
 3. VSCode plugin: Instalacion, uso, testing, desarrollo
-4. Revise
+4. Revise.jl y workflow
 4. Makie.jl
 5. Plots y cambiar de backend
 6. Programmacion funcional y benchmarking y 
@@ -759,6 +800,9 @@ TODO: GLOSARIO!
 17. `rand()` y features del `RNG`
 18. Ventaja de Julia: Graphs.jl y GraphBLAS y SparseGraphBLAS 
 19. Jack Dongarra, BLAS benchmarks, Octavian.jl, LoopVectorization.jl
+24. BLAS subroutines via Julia
 20. Cuando intersectar/buscar con un vector es mas rapido que en un Set
-21. Notebook de Jakob Nissen
+21. **Notebook de Jakob Nissen**
+22. Arrow, DataFrames,
+23. SuiteSparseGraphBLAS example
 

@@ -3,19 +3,23 @@ using CSV, DataFrames, Dates, Folds
 ## Cargar datos
 
 tipos = [Date, String7, UInt8, UInt8, UInt8,
-        UInt8, UInt8, UInt8, UInt8, UInt8,
+        UInt8, UInt8, UInt8, UInt16, UInt8,
         Date, Date, String15, UInt8, UInt8,
-        UInt8, UInt8, UInt8, UInt8, UInt8,
+        UInt16, UInt8, UInt8, UInt8, UInt8,
         UInt8, UInt8, UInt8, UInt8, UInt8, 
         UInt8, UInt8, UInt8, UInt8, UInt8, 
         UInt8, UInt8, UInt8, UInt8, UInt8, 
-        UInt8, UInt8, String7, UInt8, UInt8]
+        UInt8, UInt8, String63, String31, UInt8]
 @time begin
     fechaDate = Date(2022,6,16)
+    # TAREA: usar ZipFile.jl y Artifacts para homologar esta descarga con respecto a distinto sistemas operativos
     # "https://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/historicos/2022/06/datos_abiertos_covid19_16.06.2022.zip" 
     archivo = "220616COVID19MEXICO.csv"    
     println("Fecha de los datos: ", fechaDate, "\n")
-    df = DataFrame(CSV.File(archivo, limit = 200, types = tipos))
+    # para el JIT
+    #df = DataFrame(CSV.File("head.csv", types = tipos))
+    # TAREA: Usar Arrow.jl para acelerar esta carga de datos
+    df = DataFrame(CSV.File(archivo, types = tipos))
     println(size(df))
     println(names(df), "\n")
 end # 30 s
@@ -143,9 +147,12 @@ end; # 26 m
     RR = PP .- I 
 end; # 26 m
 
+# Con 200 hileras
 # Base.summarysize(df) == 67312
 # Despues de conversiones de tipo
 # Despues de cambiar todos los ints a UInt8 y la columna 13 a String15
 # Base.summarysize(df) == 19608
 
-# Considerar usar folds
+# Considerar usar Folds
+# Con todo el archivo:
+# Base.summarsize(df) == 1_477_447_286

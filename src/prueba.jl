@@ -44,8 +44,8 @@ end
 fib(8)
 
 @sync begin
-    @spawn #download 1
-    @spawn #download 2
-    @spwan #download 3
-    @spawn #download
+    @spawn println(1)
+    @spawn println(2)
+    @spawn println(3)
+    @spawn println(4)
 end
