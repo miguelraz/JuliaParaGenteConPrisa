@@ -810,6 +810,66 @@ Si se puede, busca en el manual 💃
 1. Escoge un tutorial de `Flux.jl` y siguelo lo mejor que puedas. Los puedes encontrar [aqui](https://fluxml.ai/tutorials/2021/01/26/mlp.html)
 2. Que es la diferenciacion automatica? Como puedo derivar una catapulta?
 3. Picarle a la [documentacion de Flux.jl](https://fluxml.ai/Flux.jl/dev/models/overview/) y llevar un curso de Deep Learning. Volverse mesias tecnologico y comprar la casa en Bahamas.
+----
+
+## Dia 09 - Analisis genomico y Optimizacion
+### Repaso, dudas, administrivia.
+0. Instalar los siguientes paquetes:
+```julia
+using JuMP, BioSequences, FASTX, HiGHS, DataFrames
+```
+1. Constancias y formulario
+2. Proyectos finales
+3. **BONUS BONUS**: *Leer La triple helice de Richar Lewontin*.
+
+### BioSequences.jl
+0. Instala `BioSequences.jl` con `using Pkg; Pkg.add("BioSequences")`
+1. Si quieres ver un repositorio enorme de problemas de secuencias genomicas, [revisa rosalind.info](https://rosalind.info/problems/locations/)
+2. Abre la documentacion de [BioSequences.jl](https://biojulia.net/BioSequences.jl/stable/symbols/) y contesta las siguientes preguntas
+3. Cuantos nucleotidos existen? 
+4. Cuanto pesan en memoria `"a"`, `'a'`, `0`, `true`? Muestra sus bits si es posible.
+5. Ahora busca la representacion en memoria de adenina de RNA y adenina de DNA
+6. Convierte `'C'` en citosina de ADN.
+7. Cuanto pesa en memoria la leucina `AA_L`? Como esta representada?
+8. Usa `LongDNA{4}(...)` para convertir la cadena `"TTANC"`. Que cosas interesantes puedes decir de sus estructura? Y de sus supertipos? Que metodos puedes llamar sobre ese objeto?
+9. Concatena dos cadenas de ADN `"ACGT"` juntas (Osea, que te resulte una cadena de ADN "ACGTACGT"`)
+10. Genera una secuencia de `"ACGT"` de tamanio `100`.
+11. Usa los macros `dna"..."` y `rna"..."` para definir cadenas de tamanio 10.
+12. Usa los siguientes algoritmos comunes en tus ADNs:
+  - `pop!`, `popfirst!`
+  - `push!`, `pushfirst!`
+  - `reverse`, `reverse!`
+  - `insert!`
+  - `deleteat!`
+13. Revisa con la secuencia de ADN de `"ACGTTGCAAGCTAGAT"`
+  - si es palindromica
+  - obtener su complemento invertido
+  - es canonica
+14. Descarga la secuencia del covid19 con `FASTX.jl` de [este sitio](https://www.ncbi.nlm.nih.gov/nuccore/NC_045512). Lee el archivo.
+  - encuentra si la secuencia de `"DAMMFT"` ocurre
+  - encuentra la ultima secuencia de `"NN"`, la primera, y cuenta todas
+  - haz una busqueda aproximada de `"DAMM"`
+  - **Bonus**: Cuenta cuantos nucleotidos tipo `"N"` hay en la secuencia del Covid. Recuerda que puedes usar la iteracion estilo
+  ```julia
+  count = 0
+  for in covidrna
+    if ...
+      ...
+    end
+  end
+  ```
+  O usar metodos funcionales.
+  - Haz un benchmarking con `@btime` de `BenchmarkTools.jl` para contar y comparalo con tu implementacion.
+  - Ahora corre los analisis anteriores pero convirtiendo la secuencia del covid en un `String` convencional. Cual es la diferencia en consumo de memoria? Velocidad? Cuanto pesa uno con respecto al otro en memoria? (Hint: Usa `Base.summarysize(x)`)
+  - Inspecciona el ensamblador para ver si hay muchos uso de registros estilo SIMD/vectorizado. (Esos vectores se ven como `xmm`, `ymm`, `zmm`)
+  
+### JuMP
+0. Tarea moral: ver los solvers de [DifferentialEquations.jl]()
+1. Vamos a resolver juntos el [problema de la dieta en JuMP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/introduction/)
+2. Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/installation/#Supported-solvers).
+3. Vamos a resolver juntos el [problema de Rocket Control](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/rocket_control/#Rocket-Control)
+  - Resuelve el problema 
+  - Cambia el solver y vuelve a resolver el problema, compara sus tiempos de resolucion
 
 ------
 #### Capsulas a hacer: Joyas de Julia
