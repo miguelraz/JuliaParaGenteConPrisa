@@ -872,19 +872,59 @@ midna"ACGT"
 ```
 12. Usa los siguientes algoritmos comunes en tus ADNs:
   - `pop!`, `popfirst!`
+  ```julia
+  pop!(dna"ACGT") == dna"T"
+  popfirst!(dna"ACGT") == dna"A"
+  ```
   - `push!`, `pushfirst!`
+  ```julia
+  push!(dna"ACGT", DNA_T) == dna"ACGTT"
+  pushfirst!(dna"ACGT", DNA_T) == dna"TACGT"
+  ```
   - `reverse`, `reverse!`
+  ```julia
+  reverse(dna"ACGT") == dna"TGCA"
+  ```
   - `insert!`
+  ```julia
+  insert!(dna"ACGT", 2, DNA_T) == dna"ATCGT"
+  ```
   - `deleteat!`
-13. Revisa con la secuencia de ADN de `"ACGTTGCAAGCTAGAT"`
+  ```julia
+  deleteat!(dna"ACGT", 2) == dna"AGT"
+  ```
+13. Revisa con la secuencia de ADN de `seq = dna"ACGTTGCAAGCTAGAT"`
   - si es palindromica
-  - obtener su complemento invertido
+  ```julia
+  ispalindormic(seq) == false
+  ```
+  - obtener su complemento
+  ```julia
+  complement(seq) 
+  ```
   - es canonica
+  ```julia
+  iscanonical(seq)
+  ```
 14. Descarga la secuencia del covid19 con `FASTX.jl` de [este sitio](https://www.ncbi.nlm.nih.gov/nuccore/NC_045512). Lee el archivo.
-  - encuentra si la secuencia de `"DAMMFT"` ocurre
-  - encuentra la ultima secuencia de `"NN"`, la primera, y cuenta todas
-  - haz una busqueda aproximada de `"DAMM"`
-  - **Bonus**: Cuenta cuantos nucleotidos tipo `"N"` hay en la secuencia del Covid. Recuerda que puedes usar la iteracion estilo
+  - encuentra si la secuencia de `"ACCC"` ocurre
+  ```julia
+  query = ExactSearchQuery(aa"ACCC")
+  occursin(query, covid)
+  ```
+  - encuentra la ultima secuencia de `"ACCC"`, la primera, y cuenta todas
+  ```julia
+  query = ExactSearchQuery(aa"ACCC")
+  findlast(query, covid)
+  findfirst(query, covid)
+  count(query, covid) # TODO!
+  ```
+  - haz una busqueda aproximada de `"CATCAT"`
+  ```julia
+  query = ApproximanteSearchQuery(aa"CATCAT")
+  findfirst(query, 0, covid)
+  ```
+  - **Bonus**: Cuenta cuantos nucleotidos tipo `'C'` hay en la secuencia del Covid. Recuerda que puedes usar la iteracion estilo
   ```julia
   count = 0
   for in covidrna
@@ -893,8 +933,18 @@ midna"ACGT"
     end
   end
   ```
+  ```julia
+  count(==(AA_C), covid)
+  ```
   O usar metodos funcionales.
   - Haz un benchmarking con `@btime` de `BenchmarkTools.jl` para contar y comparalo con tu implementacion.
+  ```julia
+  fakecovid = copy(covid)
+  for i in 1:1000:length(covid)
+    fakecovid[i] = AA_C
+  end
+  matches(fakecovid, covid) == mapreduce(==, +, fakecovid, matches)
+  ```
   - Ahora corre los analisis anteriores pero convirtiendo la secuencia del covid en un `String` convencional. Cual es la diferencia en consumo de memoria? Velocidad? Cuanto pesa uno con respecto al otro en memoria? (Hint: Usa `Base.summarysize(x)`)
   - Inspecciona el ensamblador para ver si hay muchos uso de registros estilo SIMD/vectorizado. (Esos vectores se ven como `xmm`, `ymm`, `zmm`)
   - Define una nueva secuencia identica a la de covid, modificala en 10 lugares, y toma la distancia de Hamming. Haz un benchmarking de tu metodo y el de `BioSequences.jl`.
@@ -940,4 +990,5 @@ TODO: GLOSARIO!
 25. Como hacer un issue en github a un repo de Julia
 26. Que es semantic versioning?
 27. Base.summarysize vs sizeof
+28. Covid19 y BioSequence, covid y evitar el `count_naive`, link de Discourse de `count` siendo lento
 
