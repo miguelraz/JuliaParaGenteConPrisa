@@ -820,21 +820,56 @@ using JuMP, BioSequences, FASTX, HiGHS, DataFrames
 ```
 1. Constancias y formulario
 2. Proyectos finales
-3. **BONUS BONUS**: *Leer La triple helice de Richar Lewontin*.
+3. **BONUS BONUS**: *Leer `La triple helice` de *Richard Lewontin**.
 
 ### BioSequences.jl
 0. Instala `BioSequences.jl` con `using Pkg; Pkg.add("BioSequences")`
 1. Si quieres ver un repositorio enorme de problemas de secuencias genomicas, [revisa rosalind.info](https://rosalind.info/problems/locations/)
 2. Abre la documentacion de [BioSequences.jl](https://biojulia.net/BioSequences.jl/stable/symbols/) y contesta las siguientes preguntas
 3. Cuantos nucleotidos existen? 
+```julia
+alphabet(DNA) |> length == 16
+alphabet(RNA) |> length == 16
+```
 4. Cuanto pesan en memoria `"a"`, `'a'`, `0`, `true`? Muestra sus bits si es posible.
+```julia
+Base.summarysize.(["a", 'a', 0, true]) == [9, 4, 8, 1] # Recuerda que estoy mide en bytes! O sea, mulitplica por 8 y es el numero de bits
+```
 5. Ahora busca la representacion en memoria de adenina de RNA y adenina de DNA
+```julia
+Base.summarysize(RNA_A) == Base.summarysize(DNA_A) == 8
+```
 6. Convierte `'C'` en citosina de ADN.
-7. Cuanto pesa en memoria la leucina `AA_L`? Como esta representada?
+```julia
+convert(DNA_C, 'C')
+```
+7. Cuanto pesa en memoria la leucina `AA_L`? Como esta representada? Como esta representado `'a'`?
+```julia
+Base.summarysize(AA_L) == 1
+# Si usamos @edit AminoAcid('L'), y buscamos la tabla... y encontramos que AA_L es 0x0a
+bitsring(0x0a) == "00001010"
+```
 8. Usa `LongDNA{4}(...)` para convertir la cadena `"TTANC"`. Que cosas interesantes puedes decir de sus estructura? Y de sus supertipos? Que metodos puedes llamar sobre ese objeto?
+```julia
+LongDNA{4}("TTANC")
+```
 9. Concatena dos cadenas de ADN `"ACGT"` juntas (Osea, que te resulte una cadena de ADN "ACGTACGT"`)
+```julia
+LongDNA{4}("ACGT") * LongDNA{4}("ACGT")
+```
 10. Genera una secuencia de `"ACGT"` de tamanio `100`.
-11. Usa los macros `dna"..."` y `rna"..."` para definir cadenas de tamanio 10.
+```julia
+repeat(LongDNA{4}("ACGT"), 25)
+```
+11. Usa los macros `dna"..."` y `rna"..."` para definir cadenas de tamanio 10. Define el tuyo para moder hacer `midna"ACGT"` y que funciones igual que `LongDNA{4}("ACGT")`
+```julia
+dna"ACGTACGTAC"
+rna"AAUUUGCUCA"
+macro midna_str(x)
+  LongDNA{4}(x)
+end
+midna"ACGT"
+```
 12. Usa los siguientes algoritmos comunes en tus ADNs:
   - `pop!`, `popfirst!`
   - `push!`, `pushfirst!`
@@ -862,6 +897,7 @@ using JuMP, BioSequences, FASTX, HiGHS, DataFrames
   - Haz un benchmarking con `@btime` de `BenchmarkTools.jl` para contar y comparalo con tu implementacion.
   - Ahora corre los analisis anteriores pero convirtiendo la secuencia del covid en un `String` convencional. Cual es la diferencia en consumo de memoria? Velocidad? Cuanto pesa uno con respecto al otro en memoria? (Hint: Usa `Base.summarysize(x)`)
   - Inspecciona el ensamblador para ver si hay muchos uso de registros estilo SIMD/vectorizado. (Esos vectores se ven como `xmm`, `ymm`, `zmm`)
+  - Define una nueva secuencia identica a la de covid, modificala en 10 lugares, y toma la distancia de Hamming. Haz un benchmarking de tu metodo y el de `BioSequences.jl`.
   
 ### JuMP
 0. Tarea moral: ver los solvers de [DifferentialEquations.jl]()
@@ -902,4 +938,6 @@ TODO: GLOSARIO!
 23. SuiteSparseGraphBLAS example
 24. Julia y [Arduino](https://twitter.com/arduino/status/1539594946801537025?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Etweet%7Ctwtr%5Etrue)
 25. Como hacer un issue en github a un repo de Julia
+26. Que es semantic versioning?
+27. Base.summarysize vs sizeof
 
