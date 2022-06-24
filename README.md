@@ -1081,9 +1081,6 @@ using primecount_jll
 myprimecount(x) = @ccall libprimecount.primecount_pi(x::Clonglong)::Clonglong
 myprimecount(100) == 25
 @time myprimecount(1e8)
-  0.001004 seconds
-5761455
-
 @time myprimecount(1e14)
 ```
 
