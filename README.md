@@ -1060,7 +1060,15 @@ Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/i
 * Cuantos de esos crees poder instalar? Que tan facil es instalarlos? Cuanto tiempo crees que gastarias en instalar eso para tu grupo de alumnos? Tus colaboradores?
 
 #### Breve pausa cultural - BinaryBuilder.jl
-- ![Video sobre BinaryBuilder.jl](https://www.youtube.com/watch?v=S__x3K31qnE) 
+##### Problema:
+1. Alguien mas tiene el algoritmo optimo para contar la cantidad de numeros primos mas bajos que un `n`.
+2. No vale la pena reescribir todos los codigos de `C/C++/Fortran/Rust` del mundo en Julia, ergo hay que hacer una interfaz para llamarlo desde Julia, conocido como `"wrapper"` (envoltorio, paquete).
+3. Pero esperar que los usuarios puedan instalar las dependencias de terceros (instalar un codigo en `C`, digamos) con todas las combinaciones de compiladores y sistemas operativos (Mac, Ubuntu, Windows, FreeBSD, Arch) es una pesadilla como desarrollador y como usuario (que si no hay instrucciones para tu compu de 32bits 🙃?)
+4. El sueño ❇️ es que solo tuvieras que hacer `using numerosprimos_jll`
+  - Subir una receta para todos los sistemas operativos
+5. PUES ES JUSTO LO QUE EXISTE EN JULIA!
+
+6. ![Video sobre BinaryBuilder.jl](https://www.youtube.com/watch?v=S__x3K31qnE) 
 - BinaryBuilder.jl consiste en 
   1. Un ambiente virtualizado ("falso") en donde uno instala las dependencias
   2. Se generan recetas para todas las arquitecturas
@@ -1068,16 +1076,16 @@ Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/i
   4. Suben los binarios a un repositorio central (`Yggdrasil.jl`, el arbol de la vida)
   5. Con hacer `using mipaquete_jll` ya los usuarios lo descarga automagicamente.
 - Demo con `Primes_jll`.
-### Problematica:
-1. Alguien mas tiene el algoritmo optimo para contar la cantidad de numeros primos mas bajos que un `n`.
 
-- 
-
+#### Resumimos con JuMP y optimizacion
 3. Vamos a ~resolver juntos~ dejar de tarea el [problema de Rocket Control](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/rocket_control/#Rocket-Control)
   - Resuelve el problema 
   - Cambia el solver y vuelve a resolver el problema, compara sus tiempos de resolucion y consumo de recursos.
 
 #### StagedFilters.jl
+
+Este es una version un *poquito* mas interactiva pedagogica que el articulo que traduje en ingles aca, originalmente por [Jiahao Chen.](https://miguelraz.github.io/blog/smoothingjiahao/)
+
 0. Ordena los siguiente "pasos" de compilacion en el orden en el que corren:
 ```julia
     @code_typed foo(x)
@@ -1088,7 +1096,7 @@ Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/i
   @code_lowered foo(x)
 ```
 1. Genera una instruccion de un bucle for `for` sobre la variable `i`, de `1:n` con cuerpo vacio.
-  - Llena el cuerpo del for con instrucciones para llenar un arreglo `arr` en las posiciones `i` hasta `i:10` con la funcion `f(i)`
+  - Llena el cuerpo del for con instrucciones para llenar un arreglo `arr` en las posiciones `i` hasta `i:10` con la funcion `f(i)`. (Hint: esto se va a ver algo asi como `ex = :(for ...))`, despues `push!(ex.args[...], ...)`).
   - Ahora define una funcion que si toma un vector `v` de entrada, toma el promedio con los 2 numeros anteriores y los 2 numeros posteriores. Se dice que la `ventana` es de tamanio 2, y es un `rolling average`. 
   - Que optimizaciones podrias hacer si no sabes el tamanio de la ventana de antemano?
 2. Que es una funcion generada/`generated function`? Cuando corre? Que restricciones tiene?
