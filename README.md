@@ -954,10 +954,10 @@ midna"ACGT"
 ### Repaso, dudas, formulario
 0. Llenar el formulario
 1. Proyectos finales
-2. JuMP y optimizacion
 3. dudasquejascomentariossugerencias
 4. JULIACON 2022! Es gratis! Online! (Mis presentaciones)
 5. 💀 [Julia WATs????](https://discourse.julialang.org/t/a-most-harrowing-collection-of-julia-wats/77323/80) 💀
+2. JuMP y optimizacion
 
 **Moraleja del curso**:
 > 1. Nadie tiene tiempo infinito - tus herramientas deben valer la pena contra sus alternativas viables
@@ -972,8 +972,7 @@ midna"ACGT"
 * **Meta**:Vamos a resolver juntos el [problema de la dieta en JuMP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/introduction/)
 1. Importa las dependencias
 ```julia
-using JuMP, DataFrams, HiGHS
-import DataFrames
+using JuMP, DataFrames, HiGHS
 ```
 2. Carga los datos
 ```julia
@@ -1052,6 +1051,7 @@ end
 $$
 x\_{milk} + x\_{icecream} \le 6.0
 $$
+12. Instala `NLopt.jl` y reemplaza a `HiGHS.Optimizer` como solver.
 
 ---
 
@@ -1076,6 +1076,16 @@ Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/i
   4. Suben los binarios a un repositorio central (`Yggdrasil.jl`, el arbol de la vida)
   5. Con hacer `using mipaquete_jll` ya los usuarios lo descarga automagicamente.
 - Demo con `Primes_jll`.
+```julia
+using primecount_jll
+myprimecount(x) = @ccall libprimecount.primecount_pi(x::Clonglong)::Clonglong
+myprimecount(100) == 25
+@time myprimecount(1e8)
+  0.001004 seconds
+5761455
+
+@time myprimecount(1e14)
+```
 
 #### Resumimos con JuMP y optimizacion
 3. Vamos a ~resolver juntos~ dejar de tarea el [problema de Rocket Control](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/rocket_control/#Rocket-Control)
@@ -1140,5 +1150,5 @@ TODO: GLOSARIO!
 27. Base.summarysize vs sizeof
 28. Covid19 y BioSequence, covid y evitar el `count_naive`, link de Discourse de `count` siendo lento
 29. Artifacts y JLLs - solvers de JuMP y datasets: erradicar fricciones para devs y usuarios
-30. 
+30. Leer PDFs y scrapear imagenes con [PDFIO.jl ](https://github.com/sambitdash/PDFIO.jl)
 
