@@ -949,13 +949,120 @@ midna"ACGT"
   - Inspecciona el ensamblador para ver si hay muchos uso de registros estilo SIMD/vectorizado. (Esos vectores se ven como `xmm`, `ymm`, `zmm`)
   - Define una nueva secuencia identica a la de covid, modificala en 10 lugares, y toma la distancia de Hamming. Haz un benchmarking de tu metodo y el de `BioSequences.jl`.
   
+
+## Dia 10 - 🎉!
+### Repaso, dudas, formulario
+0. Llenar el formulario
+1. Proyectos finales
+2. JuMP y optimizacion
+3. dudasquejascomentariossugerencias
+4. JULIACON 2022! Es gratis! Online!
+5. 💀Julia WATs???? 💀
+
+**Moraleja del curso**:
+> 1. Nadie tiene tiempo infinito - tus herramientas deben valer la pena contra sus alternativas viables
+> 2. Aprender a medir, pedir ayuda, y resolver tus propias dudas con tus propias herramientas - tener "feedback loops" estrechos sinergiza mucho.
+> 3. Escoge el algoritmo toericamente optimo -> Minimiza el trabajo que debe hacer tu codigo
+> 4. Entiende como se representan las cosas en memoria y como se mueven - no gastes de mas.
+> 5. 1 solo core de tu laptop es *muy* poderoso (puede hacer varios GHz por segundo, o ~10^9 operaciones por segundo), no temas a exprimirle lo maximo y poder aproximar si algo se deberia poder hacer en menos tiempo.
+
+### Tarea moral
+* Discutir los solvers de [DifferentialEquations.jl](https://diffeq.sciml.ai/stable/solvers/ode_solve/)
 ### JuMP
-0. Tarea moral: ver los solvers de [DifferentialEquations.jl]()
-1. Vamos a resolver juntos el [problema de la dieta en JuMP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/introduction/)
-2. Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/installation/#Supported-solvers).
+* **Meta**:Vamos a resolver juntos el [problema de la dieta en JuMP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/introduction/)
+1. Importa las dependencias
+```julia
+using JuMP, DataFrams, HiGHS
+import DataFrames
+```
+2. Carga los datos
+```julia
+foods = DataFrames.DataFrame(
+    [
+        "hamburger" 2.49 410 24 26 730
+        "chicken" 2.89 420 32 10 1190
+        "hot dog" 1.50 560 20 32 1800
+        "fries" 1.89 380 4 19 270
+        "macaroni" 2.09 320 12 10 930
+        "pizza" 1.99 320 15 12 820
+        "salad" 2.49 320 31 12 1230
+        "milk" 0.89 100 8 2.5 125
+        "ice cream" 1.59 330 8 10 180
+    ],
+    ["name", "cost", "calories", "protein", "fat", "sodium"],
+)
+```
+3. Establece las restricciones
+```julia
+limits = DataFrames.DataFrame(
+    [
+        "calories" 1800 2200
+        "protein" 91 Inf
+        "fat" 0 65
+        "sodium" 0 1779
+    ],
+    ["name", "min", "max"],
+)
+```
+4. Define un `model`o de `JuMP`. Como tenemos un problema lineal, usaremos el optimizador `HiGHS`.
+```julia
+model = Model(HiGHS.Optimizer)
+```
+* Que otros solvers para problemas lineales existen? Cuales son gratis? Cual es el que mas conviene? Intenta instalar otro y resolver este problema de la misma manera.
+5.  Define las variables de decision.
+```julia
+@variable(model, x[foods.name] >= 0)
+```
+* Que pasa si llamas `@variable model x[foods.name] >= 0`? Son equivalentes?
+6. Ahora puedes definir una funcion objetivo (que es lo que quieres que cumpla tu funcion principal - esto es lo que buscas "optimizar")
+```julia
+@objective(
+    model,
+    Min,
+    sum(food["cost"] * x[food["name"]] for food in eachrow(foods)),
+)
+```
+* **NOTA**:
+7. Tambien puedes usar codigo en Julia para definir estas restricciones:
+```julia
+for limit in eachrow(limits)
+    intake = @expression(
+        model,
+        sum(food[limit["name"]] * x[food["name"]] for food in eachrow(foods)),
+    )
+    @constraint(model, limit.min <= intake <= limit.max)
+end
+```
+8. Imprime el modelo con 
+```julia
+print(model)
+```
+9. Ahora optimiza y describe el modelo con 
+```julia
+optimize!(model)
+solution_summary(model)
+```
+10. Imprime la solucion optima:
+```julia
+for food in foods.name
+    println(food, " = ", value(x[food]))
+end
+11. Trata de agregar un nuevo `@constraint` (restriccion) al modelo donde 
+```
+$$$
+x\_{milk} + x\{ice cream} \le 6.0
+$$$
+```
+
+
+* **Meta**: Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/installation/#Supported-solvers).
 3. Vamos a resolver juntos el [problema de Rocket Control](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/rocket_control/#Rocket-Control)
   - Resuelve el problema 
   - Cambia el solver y vuelve a resolver el problema, compara sus tiempos de resolucion
+
+-----
+
+
 
 ------
 #### Capsulas a hacer: Joyas de Julia
