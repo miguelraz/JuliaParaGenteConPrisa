@@ -956,7 +956,7 @@ midna"ACGT"
 1. Proyectos finales
 2. JuMP y optimizacion
 3. dudasquejascomentariossugerencias
-4. JULIACON 2022! Es gratis! Online!
+4. JULIACON 2022! Es gratis! Online! (Mis presentaciones)
 5. 💀 [Julia WATs????](https://discourse.julialang.org/t/a-most-harrowing-collection-of-julia-wats/77323/80) 💀
 
 **Moraleja del curso**:
@@ -1059,11 +1059,41 @@ $$
 Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/installation/#Supported-solvers).
 * Cuantos de esos crees poder instalar? Que tan facil es instalarlos? Cuanto tiempo crees que gastarias en instalar eso para tu grupo de alumnos? Tus colaboradores?
 
-3. Vamos a resolver juntos el [problema de Rocket Control](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/rocket_control/#Rocket-Control)
-  - Resuelve el problema 
-  - Cambia el solver y vuelve a resolver el problema, compara sus tiempos de resolucion
+#### Breve pausa cultural - BinaryBuilder.jl
+- ![Video sobre BinaryBuilder.jl](https://www.youtube.com/watch?v=S__x3K31qnE) 
+- BinaryBuilder.jl consiste en 
+  1. Un ambiente virtualizado ("falso") en donde uno instala las dependencias
+  2. Se generan recetas para todas las arquitecturas
+  3. Se consiguen robots para verificar que las instalaciones en todos los sistemas operativos funcionan
+  4. Suben los binarios a un repositorio central (`Yggdrasil.jl`, el arbol de la vida)
+  5. Con hacer `using mipaquete_jll` ya los usuarios lo descarga automagicamente.
+- Demo con `Primes_jll`.
+### Problematica:
+1. Alguien mas tiene el algoritmo optimo para contar la cantidad de numeros primos mas bajos que un `n`.
 
------
+- 
+
+3. Vamos a ~resolver juntos~ dejar de tarea el [problema de Rocket Control](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/rocket_control/#Rocket-Control)
+  - Resuelve el problema 
+  - Cambia el solver y vuelve a resolver el problema, compara sus tiempos de resolucion y consumo de recursos.
+
+#### StagedFilters.jl
+0. Ordena los siguiente "pasos" de compilacion en el orden en el que corren:
+```julia
+    @code_typed foo(x)
+          foo(x)
+        @code_native foo(x)
+@time foo(x)
+      @code_llvm foo(x)
+  @code_lowered foo(x)
+```
+1. Genera una instruccion de un bucle for `for` sobre la variable `i`, de `1:n` con cuerpo vacio.
+  - Llena el cuerpo del for con instrucciones para llenar un arreglo `arr` en las posiciones `i` hasta `i:10` con la funcion `f(i)`
+  - Ahora define una funcion que si toma un vector `v` de entrada, toma el promedio con los 2 numeros anteriores y los 2 numeros posteriores. Se dice que la `ventana` es de tamanio 2, y es un `rolling average`. 
+  - Que optimizaciones podrias hacer si no sabes el tamanio de la ventana de antemano?
+2. Que es una funcion generada/`generated function`? Cuando corre? Que restricciones tiene?
+**BONUS**: Leer el paper sobre [el `world age en Julia`](http://janvitek.org/pubs/oopsla20-j.pdf)
+3. Ugh... ok, haremos benchmarking sobre `StagedFilters.jl`.
 
 
 
@@ -1101,4 +1131,6 @@ TODO: GLOSARIO!
 26. Que es semantic versioning?
 27. Base.summarysize vs sizeof
 28. Covid19 y BioSequence, covid y evitar el `count_naive`, link de Discourse de `count` siendo lento
+29. Artifacts y JLLs - solvers de JuMP y datasets: erradicar fricciones para devs y usuarios
+30. 
 
