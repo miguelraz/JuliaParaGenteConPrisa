@@ -1091,6 +1091,7 @@ myprimecount(100) == 25
 
 #### StagedFilters.jl
 
+**NO NECESITAS ESTO 99% del tiempo**: [Pero hoy queriamos](https://www.youtube.com/watch?v=mSgXWpvQEHE) pavonear 🦚
 Este es una version un *poquito* mas interactiva pedagogica que el articulo que traduje en ingles aca, originalmente por [Jiahao Chen.](https://miguelraz.github.io/blog/smoothingjiahao/)
 
 0. Ordena los siguiente "pasos" de compilacion en el orden en el que corren:
@@ -1102,11 +1103,33 @@ Este es una version un *poquito* mas interactiva pedagogica que el articulo que 
       @code_llvm foo(x)
   @code_lowered foo(x)
 ```
+Solucion:
+```
+@time foo(x) # <- tiempo del "parse"
+  @code_lowered foo(x)
+    @code_typed foo(x) # <-  Entre estos dos puntos sucede la recompilacion con funciones `generated`
+      @code_llvm foo(x) # <- 
+        @code_native foo(x)
+          foo(x)
+```
 1. Genera una instruccion de un bucle for `for` sobre la variable `i`, de `1:n` con cuerpo vacio.
+```julia
+
+```
   - Llena el cuerpo del for con instrucciones para llenar un arreglo `arr` en las posiciones `i` hasta `i:10` con la funcion `f(i)`. (Hint: esto se va a ver algo asi como `ex = :(for ...))`, despues `push!(ex.args[...], ...)`).
-  - Ahora define una funcion que si toma un vector `v` de entrada, toma el promedio con los 2 numeros anteriores y los 2 numeros posteriores. Se dice que la `ventana` es de tamanio 2, y es un `rolling average`. 
+  - Ahora define una funcion que si toma un vector `v` de entrada, toma el promedio con los 2 numeros anteriores y los 2 numeros posteriores. Se dice que la `ventana` es de tamanio 2, y es un `rolling average`. (Asume que el vector es de tamanio `10`)
+  ```julia
+  
+  ```
   - Que optimizaciones podrias hacer si no sabes el tamanio de la ventana de antemano?
-2. Que es una funcion generada/`generated function`? Cuando corre? Que restricciones tiene?
+2. Que es una funcion generada/`generated function`? Cuando corre? Que [restricciones tiene](https://docs.julialang.org/en/v1/manual/metaprogramming/#Generated-functions)?
+```
+- Necesitas el `@generated` frente a tu funcion
+- Solo puedes operar sobre tipos, no valores
+- Debes regresar una `Expr`.
+- Solo pueden llamar funciones que ya fueron definidas
+- No pueden mutar/observar estado global
+```
 **BONUS**: Leer el paper sobre [el `world age en Julia`](http://janvitek.org/pubs/oopsla20-j.pdf)
 3. Ugh... ok, haremos benchmarking sobre `StagedFilters.jl`.
 
