@@ -957,7 +957,7 @@ midna"ACGT"
 2. JuMP y optimizacion
 3. dudasquejascomentariossugerencias
 4. JULIACON 2022! Es gratis! Online!
-5. 💀Julia WATs???? 💀
+5. 💀 [Julia WATs????](https://discourse.julialang.org/t/a-most-harrowing-collection-of-julia-wats/77323/80) 💀
 
 **Moraleja del curso**:
 > 1. Nadie tiene tiempo infinito - tus herramientas deben valer la pena contra sus alternativas viables
@@ -1022,8 +1022,7 @@ model = Model(HiGHS.Optimizer)
     sum(food["cost"] * x[food["name"]] for food in eachrow(foods)),
 )
 ```
-* **NOTA**:
-7. Tambien puedes usar codigo en Julia para definir estas restricciones:
+* **NOTA**: Tambien puedes usar codigo en Julia para definir estas restricciones:
 ```julia
 for limit in eachrow(limits)
     intake = @expression(
@@ -1033,11 +1032,11 @@ for limit in eachrow(limits)
     @constraint(model, limit.min <= intake <= limit.max)
 end
 ```
-8. Imprime el modelo con 
+7. Imprime el modelo con 
 ```julia
 print(model)
 ```
-9. Ahora optimiza y describe el modelo con 
+8. Ahora optimiza y describe el modelo con 
 ```julia
 optimize!(model)
 solution_summary(model)
@@ -1047,15 +1046,19 @@ solution_summary(model)
 for food in foods.name
     println(food, " = ", value(x[food]))
 end
+```
 11. Trata de agregar un nuevo `@constraint` (restriccion) al modelo donde 
-```
-$$$
-x\_{milk} + x\{ice cream} \le 6.0
-$$$
-```
 
+$$
+x\_{milk} + x\_{icecream} \le 6.0
+$$
 
-* **Meta**: Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/installation/#Supported-solvers).
+---
+
+### **Meta**: Flexear 💪 el poder de Julia.
+Repasemos la pagina de los [Supported Solvers](https://jump.dev/JuMP.jl/stable/installation/#Supported-solvers).
+* Cuantos de esos crees poder instalar? Que tan facil es instalarlos? Cuanto tiempo crees que gastarias en instalar eso para tu grupo de alumnos? Tus colaboradores?
+
 3. Vamos a resolver juntos el [problema de Rocket Control](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/rocket_control/#Rocket-Control)
   - Resuelve el problema 
   - Cambia el solver y vuelve a resolver el problema, compara sus tiempos de resolucion
