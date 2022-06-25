@@ -1119,7 +1119,7 @@ Solucion:
   - Llena el cuerpo del for con instrucciones para llenar un arreglo `arr` en las posiciones `i` hasta `i:10` con la funcion `f(i)`. (Hint: esto se va a ver algo asi como `ex = :(for ...))`, despues `push!(ex.args[...], ...)`).
   - Ahora define una funcion que si toma un vector `v` de entrada, toma el promedio con los 2 numeros anteriores y los 2 numeros posteriores. Se dice que la `ventana` es de tamanio 2, y es un `rolling average`. (Asume que el vector es de tamanio `10`)
   ```julia
-  
+
   ```
   - Que optimizaciones podrias hacer si no sabes el tamanio de la ventana de antemano?
 2. Que es una funcion generada/`generated function`? Cuando corre? Que [restricciones tiene](https://docs.julialang.org/en/v1/manual/metaprogramming/#Generated-functions)?
@@ -1171,4 +1171,5 @@ TODO: GLOSARIO!
 28. Covid19 y BioSequence, covid y evitar el `count_naive`, link de Discourse de `count` siendo lento
 29. Artifacts y JLLs - solvers de JuMP y datasets: erradicar fricciones para devs y usuarios
 30. Leer PDFs y scrapear imagenes con [PDFIO.jl ](https://github.com/sambitdash/PDFIO.jl)
+31. Tim Holy and the `ProgressMeters.jl`
 
