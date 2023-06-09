@@ -1,0 +1,30 @@
+In[10]:= Mu=0;
+d= 10^-1;
+\[Delta]t= 0.001;
+v=1;
+Sigma=Sqrt[2d \[Delta]t ];
+Sigma1=Sqrt[2\[Delta]t ];
+In[16]:= Ntrayectorias=1000;
+angulo[Ntrayectorias];
+x[Ntrayectorias];
+y[Ntrayectorias];
+For[i=1,i<=Ntrayectorias,i++,x[i]=0;y[i]=0;angulo[i]=0];
+
+
+In[21]:= 
+lista={};
+Npasos=1000;
+For[j=1,j<=Npasos,j++,sumx=0;sumy=0;
+sumx2=0;sumy2=0;
+For[i=1,i<=Ntrayectorias,i++,
+angulo[i]=angulo[i]+Sigma1*RandomReal[NormalDistribution[0,1]];
+x[i]=x[i]+\[Delta]t*v*Cos[angulo[i]]+Sigma*RandomReal[NormalDistribution[0,1]];
+y[i]=y[i]+\[Delta]t*v*Sin[angulo[i]]+Sigma*RandomReal[NormalDistribution[0,1]];
+sumx=sumx+x[i];
+sumy=sumy+y[i];
+sumx2=sumx2+x[i]^2;
+sumy2=sumy2+y[i]^2];
+lista=Append[lista,{N[\[Delta]t*j],N[sumx/Ntrayectorias],N[sumy/Ntrayectorias],N[(sumx2+sumy2)/Ntrayectorias]}];
+Export["datosMBA2D1000.dat",lista,"Data"]
+]
+In[24]:= 
