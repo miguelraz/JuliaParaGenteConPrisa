@@ -65,5 +65,10 @@ end
 #Caso Ejemplo 
 Ab = [-1.0 3.0 2.0; 3.0 -4.0 1.0; 2.0 5.0 -2.0];
 @show Ab
+
+@profview FLU(Ab, 0)
+@profview_allocs FLU(Ab, 0)
+
+@time FLU(Ab, 0)
 @time FLU(Ab, 0)
 @btime FLU($Ab, 0)
